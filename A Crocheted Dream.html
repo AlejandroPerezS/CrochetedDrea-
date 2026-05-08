@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Crocheted Dream | Handmade Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Quicksand', sans-serif; scroll-behavior: smooth; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+        .modal { transition: opacity 0.2s ease-in-out; display: none; }
+        .modal.active { display: flex; opacity: 1; }
+        .hero-bg { background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%); }
+    </style>
+</head>
+<body class="bg-[#faf9f6] text-gray-800">
+
+    <!-- Navigation -->
+    <nav class="flex justify-between items-center px-6 md:px-10 py-4 bg-white shadow-sm sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <!-- LOGO PLACEHOLDER -->
+            <img src="https://imgur.com/a/l7Ry3l1" alt="Logo" class="rounded-full w-12 h-12 border border-[#ede0d4]">
+            <div class="text-xl md:text-2xl font-bold text-[#8d775f]">A Crocheted Dream</div>
+        </div>
+        <a href="https://www.instagram.com/a_crocheted_dream" target="_blank" class="bg-[#b08968] text-white px-5 py-2 rounded-full text-sm hover:bg-[#7f5539] transition">Follow on IG</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-bg min-h-[60vh] flex flex-col justify-center items-center text-center px-4">
+        <h1 class="text-5xl md:text-7xl mb-4 text-[#582f0e]">Handmade with Love</h1>
+        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mb-8">Bespoke amigurumi and crochet creations. Explore our seasonal collections below.</p>
+        <a href="#collections" class="bg-[#7f5539] text-white px-8 py-3 rounded-md font-bold hover:bg-[#582f0e] transition shadow-md">View Collections</a>
+    </header>
+
+    <!-- Main Collections -->
+    <section id="collections" class="py-20 px-6 max-w-7xl mx-auto">
+        <div id="category-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Categories will be injected here by the script -->
+        </div>
+    </section>
+
+    <!-- Inquiry Section -->
+    <section id="contact" class="bg-[#ede0d4] py-20 px-6">
+        <div class="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-3xl shadow-xl">
+            <h2 class="text-3xl text-center mb-6 text-[#582f0e]">Product Inquiry</h2>
+            <p class="text-center text-gray-600 mb-8">Found something you love? Tell us the item name and your details below.</p>
+            <form id="inquiryForm" class="space-y-4">
+                <input id="subjectLine" type="text" placeholder="I'm interested in..." class="w-full p-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#b08968] font-bold text-[#8d775f]">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" placeholder="Your Name" class="w-full p-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#b08968]">
+                    <input type="email" placeholder="Email Address" class="w-full p-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#b08968]">
+                </div>
+                <textarea placeholder="Any specific colors or custom requests?" rows="4" class="w-full p-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#b08968]"></textarea>
+                <button type="submit" class="w-full bg-[#b08968] text-white font-bold py-4 rounded-xl hover:bg-[#7f5539] transition">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 text-center text-gray-400 text-sm bg-white border-t">
+        <p>&copy; 2024 A Crocheted Dream. All rights reserved.</p>
+    </footer>
+
+    <!-- ALBUM MODAL -->
+    <div id="albumModal" class="modal fixed inset-0 z-[100] bg-black bg-opacity-95 flex-col items-center overflow-y-auto p-6">
+        <div class="max-w-6xl w-full">
+            <div class="flex justify-between items-center mb-10 sticky top-0 bg-black bg-opacity-80 py-4 z-10">
+                <h2 id="modalTitle" class="text-white text-3xl font-bold">Album Name</h2>
+                <button onclick="closeAlbum()" class="text-white text-5xl font-thin hover:text-red-400">&times;</button>
+            </div>
+            
+            <!-- This is the "Mini Album" Grid -->
+            <div id="albumGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Products will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* 
+           =========================================
+           NON-TECHNICAL UPDATE SECTION
+           =========================================
+           Your mom can change names, prices, and image links here.
+           Just make sure every item has a comma after it except the last one!
+        */
+        const siteContent = {
+            "Plushies": [
+                { name: "Forest Fox", price: "$45", img: "https://via.placeholder.com/400x400?text=Fox" },
+                { name: "Blue Dragon", price: "$55", img: "https://via.placeholder.com/400x400?text=Dragon" },
+                { name: "Sleepy Bunny", price: "$40", img: "https://via.placeholder.com/400x400?text=Bunny" }
+            ],
+            "Home Decor": [
+                { name: "Boho Wall Hanging", price: "$65", img: "https://via.placeholder.com/400x400?text=Wall+Art" },
+                { name: "Sun Mirror", price: "$75", img: "https://via.placeholder.com/400x400?text=Mirror" }
+            ],
+            "Seasonal (Fall)": [
+                { name: "Spooky Ghost", price: "$25", img: "https://via.placeholder.com/400x400?text=Ghost" },
+                { name: "Stitched Pumpkin", price: "$20", img: "https://via.placeholder.com/400x400?text=Pumpkin" },
+                { name: "Fall Scarf", price: "$35", img: "https://via.placeholder.com/400x400?text=Scarf" }
+            ]
+        };
+
+        // Initialize the category cards on the main page
+        function initSite() {
+            const grid = document.getElementById('category-grid');
+            Object.keys(siteContent).forEach(category => {
+                const card = `
+                    <div onclick="openAlbum('${category}')" class="group relative cursor-pointer overflow-hidden rounded-2xl shadow-lg h-96 bg-white border border-gray-100">
+                        <div class="h-full w-full bg-gray-100 flex items-center justify-center text-gray-400 italic">
+                            [${category} Category Image]
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-8">
+                            <h3 class="text-white text-3xl font-bold mb-2">${category}</h3>
+                            <span class="text-white text-sm border-b border-white self-start">View Products</span>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+
+        function openAlbum(category) {
+            const modal = document.getElementById('albumModal');
+            const title = document.getElementById('modalTitle');
+            const grid = document.getElementById('albumGrid');
+            
+            title.innerText = category;
+            grid.innerHTML = ''; // Clear previous
+
+            siteContent[category].forEach(item => {
+                grid.innerHTML += `
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-xl">
+                        <img src="${item.img}" alt="${item.name}" class="w-full h-64 object-cover bg-gray-200">
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="text-xl font-bold">${item.name}</h4>
+                                <span class="text-[#b08968] font-bold">${item.price}</span>
+                            </div>
+                            <button onclick="requestItem('${item.name}')" class="w-full border-2 border-[#b08968] text-[#b08968] py-2 rounded-lg font-bold hover:bg-[#b08968] hover:text-white transition">Inquire About This</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAlbum() {
+            document.getElementById('albumModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function requestItem(itemName) {
+            closeAlbum();
+            const formSection = document.getElementById('contact');
+            const subjectInput = document.getElementById('subjectLine');
+            
+            subjectInput.value = `I am interested in the ${itemName}`;
+            formSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        initSite();
+    </script>
+</body>
+</html>
+
