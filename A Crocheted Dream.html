@@ -44,13 +44,16 @@
         <div class="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-3xl shadow-xl">
             <h2 class="text-3xl text-center mb-6 text-[#582f0e]">Product Inquiry</h2>
             <p class="text-center text-gray-600 mb-8">Found something you love? Tell us the item name and your details below.</p>
-            <form id="inquiryForm" class="space-y-4">
-                <input id="subjectLine" type="text" placeholder="I'm interested in..." class="w-full p-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#b08968] font-bold text-[#8d775f]">
+            <form action="https://formspree.io/f/xnjwgkbo" method="POST" class="space-y-4">
+                <input id="subjectLine" name="Subject" type="text" placeholder="I'm interested in..." class="w-full p-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#b08968] font-bold text-[#8d775f]">
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" placeholder="Your Name" class="w-full p-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#b08968]">
-                    <input type="email" placeholder="Email Address" class="w-full p-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#b08968]">
+                    <input type="text" name="Name" placeholder="Your Name" required class="w-full p-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#b08968]">
+                    <input type="email" name="Email" placeholder="Email Address" required class="w-full p-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#b08968]">
                 </div>
-                <textarea placeholder="Any specific colors or custom requests?" rows="4" class="w-full p-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#b08968]"></textarea>
+
+                <textarea name="Message" placeholder="Any specific colors or custom requests?" rows="4" class="w-full p-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#b08968]"></textarea>
+
                 <button type="submit" class="w-full bg-[#b08968] text-white font-bold py-4 rounded-xl hover:bg-[#7f5539] transition">Send Message</button>
             </form>
         </div>
