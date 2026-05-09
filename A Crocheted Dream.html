@@ -19,7 +19,6 @@
     <!-- Navigation -->
     <nav class="flex justify-between items-center px-6 md:px-10 py-4 bg-white shadow-sm sticky top-0 z-50">
         <div class="flex items-center gap-3">
-            <!-- LOGO PLACEHOLDER -->
             <img src="https://i.imgur.com/ueCe7B2.png" alt="Logo" class="rounded-full w-12 h-12 border border-[#ede0d4] object-cover">
             <div class="text-xl md:text-2xl font-bold text-[#8d775f]">A Crocheted Dream</div>
         </div>
@@ -59,7 +58,7 @@
 
     <!-- Footer -->
     <footer class="py-12 text-center text-gray-400 text-sm bg-white border-t">
-        <p>&copy; 2024 A Crocheted Dream. All rights reserved.</p>
+        <p>&copy; 2026 A Crocheted Dream. All rights reserved.</p>
     </footer>
 
     <!-- ALBUM MODAL -->
@@ -69,8 +68,6 @@
                 <h2 id="modalTitle" class="text-white text-3xl font-bold">Album Name</h2>
                 <button onclick="closeAlbum()" class="text-white text-5xl font-thin hover:text-red-400">&times;</button>
             </div>
-            
-            <!-- This is the "Mini Album" Grid -->
             <div id="albumGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Products will be injected here -->
             </div>
@@ -82,38 +79,44 @@
            =========================================
            NON-TECHNICAL UPDATE SECTION
            =========================================
-           Your mom can change names, prices, and image links here.
-           Just make sure every item has a comma after it except the last one!
         */
         const siteContent = {
-            "Plushies": [
-                { name: "Capibara", price: "$45", img: "https://i.imgur.com/EU3dFJ5.jpg" },
-                { name: "Turtle", price: "$55", img: "https://i.imgur.com/qHndK4J.jpg" },
-                { name: "Bunny", price: "$40", img: "https://i.imgur.com/5JyTES1.jpg" }
-            ],
-            "Home Decor": [
-                { name: "Boho Wall Hanging", price: "$65", img: "https://via.placeholder.com/400x400?text=Wall+Art" },
-                { name: "Sun Mirror", price: "$75", img: "https://via.placeholder.com/400x400?text=Mirror" }
-            ],
-            "Seasonal (Fall)": [
-                { name: "Spooky Ghost", price: "$25", img: "https://via.placeholder.com/400x400?text=Ghost" },
-                { name: "Stitched Pumpkin", price: "$20", img: "https://via.placeholder.com/400x400?text=Pumpkin" },
-                { name: "Fall Scarf", price: "$35", img: "https://via.placeholder.com/400x400?text=Scarf" }
-            ]
+            "Plushies": {
+                categoryImage: "https://i.imgur.com/EU3dFJ5.jpg", // <--- CHANGE CATEGORY PHOTO HERE
+                products: [
+                    { name: "Capibara", price: "$45", img: "https://i.imgur.com/EU3dFJ5.jpg" },
+                    { name: "Turtle", price: "$55", img: "https://i.imgur.com/qHndK4J.jpg" },
+                    { name: "Bunny", price: "$40", img: "https://i.imgur.com/5JyTES1.jpg" }
+                ]
+            },
+            "Home Decor": {
+                categoryImage: "https://via.placeholder.com/600x800?text=Decor+Cover", // <--- CHANGE CATEGORY PHOTO HERE
+                products: [
+                    { name: "Boho Wall Hanging", price: "$65", img: "https://via.placeholder.com/400x400?text=Wall+Art" },
+                    { name: "Sun Mirror", price: "$75", img: "https://via.placeholder.com/400x400?text=Mirror" }
+                ]
+            },
+            "Seasonal (Fall)": {
+                categoryImage: "https://via.placeholder.com/600x800?text=Fall+Cover", // <--- CHANGE CATEGORY PHOTO HERE
+                products: [
+                    { name: "Spooky Ghost", price: "$25", img: "https://via.placeholder.com/400x400?text=Ghost" },
+                    { name: "Stitched Pumpkin", price: "$20", img: "https://via.placeholder.com/400x400?text=Pumpkin" },
+                    { name: "Fall Scarf", price: "$35", img: "https://via.placeholder.com/400x400?text=Scarf" }
+                ]
+            }
         };
 
-        // Initialize the category cards on the main page
         function initSite() {
             const grid = document.getElementById('category-grid');
+            grid.innerHTML = ''; 
             Object.keys(siteContent).forEach(category => {
+                const imgUrl = siteContent[category].categoryImage;
                 const card = `
                     <div onclick="openAlbum('${category}')" class="group relative cursor-pointer overflow-hidden rounded-2xl shadow-lg h-96 bg-white border border-gray-100">
-                        <div class="h-full w-full bg-gray-100 flex items-center justify-center text-gray-400 italic">
-                           <img src="https://i.imgur.com/ZJZqU0u.jpg">
-                        </div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-8">
+                        <img src="${imgUrl}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8">
                             <h3 class="text-white text-3xl font-bold mb-2">${category}</h3>
-                            <span class="text-white text-sm border-b border-white self-start">View Products</span>
+                            <span class="text-white text-sm border-b border-white self-start uppercase tracking-widest">View Collection</span>
                         </div>
                     </div>
                 `;
@@ -127,12 +130,12 @@
             const grid = document.getElementById('albumGrid');
             
             title.innerText = category;
-            grid.innerHTML = ''; // Clear previous
+            grid.innerHTML = ''; 
 
-            siteContent[category].forEach(item => {
+            siteContent[category].products.forEach(item => {
                 grid.innerHTML += `
                     <div class="bg-white rounded-2xl overflow-hidden shadow-xl">
-                        <img src="${item.img}" alt="${item.name}" class="w-full h-64 object-cover bg-gray-200">
+                        <img src="${item.img}" alt="${item.name}" class="w-full h-72 object-cover bg-gray-200">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-4">
                                 <h4 class="text-xl font-bold">${item.name}</h4>
@@ -155,15 +158,12 @@
 
         function requestItem(itemName) {
             closeAlbum();
-            const formSection = document.getElementById('contact');
             const subjectInput = document.getElementById('subjectLine');
-            
             subjectInput.value = `I am interested in the ${itemName}`;
-            formSection.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
         }
 
         initSite();
     </script>
 </body>
 </html>
-
