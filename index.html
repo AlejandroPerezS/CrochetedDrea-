@@ -67,14 +67,11 @@
     <section id="collections" class="py-24 px-6 max-w-7xl mx-auto">
         <h2 class="text-5xl text-center mb-8 font-cormorant text-mutedpurple italic">Our Collections</h2>
         
-        <div class="mb-12 flex flex-col md:flex-row gap-6 items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-softborder">
-            <input id="searchInput" type="text" placeholder="Search creations..." class="w-full md:w-1/3 p-3 bg-parchment border border-softborder rounded-xl focus:ring-1 focus:ring-dustyrose focus:outline-none font-semibold text-mutedpurple transition" oninput="handleSearch(event)">
-            
-            <div id="category-filters" class="flex flex-wrap gap-2 justify-center md:justify-end w-full md:w-2/3">
-                </div>
+        <div class="mb-12 flex justify-center bg-white p-4 rounded-2xl shadow-sm border border-softborder max-w-2xl mx-auto">
+            <input id="searchInput" type="text" placeholder="Search specific creations..." class="w-full p-4 bg-parchment border border-softborder rounded-xl focus:ring-1 focus:ring-dustyrose focus:outline-none font-semibold text-mutedpurple transition" oninput="handleSearch(event)">
         </div>
 
-        <div id="product-grid" class="columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8">
+        <div id="gallery-container" class="space-y-6">
             </div>
     </section>
 
@@ -150,9 +147,8 @@
 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Global state for filtering
+        // Global state
         let allProducts = [];
-        let currentCategory = 'All';
         let searchQuery = '';
 
         async function initSite() {
@@ -161,8 +157,8 @@
         }
 
         async function fetchProducts() {
-            const grid = document.getElementById('product-grid');
-            grid.innerHTML = '<p class="text-center text-mutedpurple font-cormorant text-xl w-full">Loading gallery...</p>';
+            const container = document.getElementById('gallery-container');
+            container.innerHTML = '<p class="text-center text-mutedpurple font-cormorant text-xl w-full">Loading gallery...</p>';
 
             const { data: products, error } = await _supabase
                 .from('products')
@@ -170,92 +166,124 @@
                 .order('product_id', { ascending: false });
 
             if (error) {
-                grid.innerHTML = '<p class="text-center text-red-400 w-full">Failed to load the gallery. Please check database connection.</p>';
+                container.innerHTML = '<p class="text-center text-red-400 w-full">Failed to load the gallery. Please check database connection.</p>';
+                console.error(error);
                 return;
             }
 
             allProducts = products || [];
-            renderCategories();
             renderGallery();
         }
 
-        function renderCategories() {
-            const filterContainer = document.getElementById('category-filters');
-            filterContainer.innerHTML = '';
-
-            const categories = ['All', ...new Set(allProducts.map(p => p.category || 'Uncategorized').filter(c => c.trim() !== ''))];
-
-            categories.forEach(cat => {
-                const btn = document.createElement('button');
-                btn.innerText = cat;
-                
-                const baseStyle = "px-5 py-2 rounded-full text-sm font-semibold transition border shadow-sm ";
-                if (currentCategory === cat) {
-                    btn.className = baseStyle + "bg-dustyrose text-white border-dustyrose";
-                } else {
-                    btn.className = baseStyle + "bg-parchment text-mutedpurple border-softborder hover:border-dustyrose hover:text-dustyrose";
-                }
-                
-                btn.onclick = () => {
-                    currentCategory = cat;
-                    renderCategories();
-                    renderGallery();
-                };
-                filterContainer.appendChild(btn);
-            });
-        }
-
+        // Search trigger
         function handleSearch(event) {
             searchQuery = event.target.value.toLowerCase();
             renderGallery();
         }
 
-        function renderGallery() {
-            const grid = document.getElementById('product-grid');
-            grid.innerHTML = '';
+        // Toggle specific category visibility
+        function toggleCategory(catId) {
+            const content = document.getElementById(`content-${catId}`);
+            const icon = document.getElementById(`icon-${catId}`);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.innerText = '−'; // minus symbol
+            } else {
+                content.classList.add('hidden');
+                icon.innerText = '+'; // plus symbol
+            }
+        }
 
+        function renderGallery() {
+            const container = document.getElementById('gallery-container');
+            container.innerHTML = '';
+
+            // 1. Filter products based on search
             const filteredProducts = allProducts.filter(item => {
-                const searchMatch = item.product_name.toLowerCase().includes(searchQuery) || 
-                                  (item.product_description && item.product_description.toLowerCase().includes(searchQuery));
-                const categoryMatch = currentCategory === 'All' || 
-                                    (item.category || 'Uncategorized') === currentCategory;
-                return searchMatch && categoryMatch;
+                return item.product_name.toLowerCase().includes(searchQuery) || 
+                       (item.product_description && item.product_description.toLowerCase().includes(searchQuery));
             });
 
             if (filteredProducts.length === 0) {
-                grid.innerHTML = '<p class="text-center text-deeptext/60 w-full col-span-full">No pieces match your search.</p>';
+                container.innerHTML = '<p class="text-center text-deeptext/60 w-full col-span-full">No pieces match your search.</p>';
                 return;
             }
 
+            // 2. Group products by Category
+            const groupedProducts = {};
             filteredProducts.forEach(item => {
-                const displayPrice = typeof item.product_price === 'number' ? `$${item.product_price}` : item.product_price;
-                const badge = item.category ? `<span class="absolute top-4 left-4 bg-white/90 backdrop-blur text-mutedpurple px-3 py-1 text-xs rounded-md font-semibold shadow-sm z-10 border border-softborder">${item.category}</span>` : '';
+                const category = item.category && item.category.trim() !== '' ? item.category : 'Uncategorized';
+                if (!groupedProducts[category]) {
+                    groupedProducts[category] = [];
+                }
+                groupedProducts[category].push(item);
+            });
+
+            // 3. Build the Accordion UI
+            const isSearching = searchQuery.trim() !== '';
+
+            Object.keys(groupedProducts).sort().forEach(cat => {
+                const catId = cat.replace(/\s+/g, '-'); // Create safe ID
+                const productsInCat = groupedProducts[cat];
                 
-                grid.innerHTML += `
-                    <div class="break-inside-avoid mb-8 bg-white rounded-2xl overflow-hidden shadow-sm border border-softborder flex flex-col group relative">
-                        ${badge}
-                        <button data-admin-only onclick="deleteProduct('${item.product_id}', '${item.product_image}')" class="hidden absolute top-4 right-4 z-20 bg-red-900/80 backdrop-blur text-white px-3 py-1.5 text-xs rounded-md font-semibold hover:bg-red-800 transition shadow-sm">Remove</button>
+                // Auto-expand if searching, otherwise keep hidden
+                const visibilityClass = isSearching ? '' : 'hidden';
+                const iconChar = isSearching ? '−' : '+';
+
+                // Build category header
+                let html = `
+                    <div class="bg-white rounded-[1.5rem] shadow-sm border border-softborder overflow-hidden">
+                        <button onclick="toggleCategory('${catId}')" class="w-full px-8 py-6 bg-white flex justify-between items-center hover:bg-parchment transition border-b border-transparent">
+                            <h3 class="text-3xl font-semibold font-cormorant text-mutedpurple m-0 flex items-center gap-3">
+                                ${cat}
+                                <span class="text-sm font-nunito bg-[#F4F0EB] text-deeptext px-3 py-1 rounded-full">${productsInCat.length}</span>
+                            </h3>
+                            <span id="icon-${catId}" class="text-3xl font-light text-dustyrose">${iconChar}</span>
+                        </button>
                         
-                        <div class="overflow-hidden bg-parchment relative">
-                            <img src="${item.product_image}" alt="${item.product_name}" class="w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                        </div>
-                        <div class="p-6 md:p-8">
-                            <div class="flex justify-between items-start mb-3 gap-2">
-                                <h4 class="text-2xl font-cormorant font-semibold text-mutedpurple leading-tight">${item.product_name}</h4>
-                                <span class="text-dustyrose font-semibold text-lg shrink-0">${displayPrice}</span>
+                        <div id="content-${catId}" class="${visibilityClass} p-8 bg-parchment/30 border-t border-softborder">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                `;
+
+                // Build product cards inside the category
+                productsInCat.forEach(item => {
+                    const displayPrice = typeof item.product_price === 'number' ? `$${item.product_price}` : item.product_price;
+                    
+                    html += `
+                        <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-softborder flex flex-col group relative">
+                            <button data-admin-only onclick="deleteProduct('${item.product_id}', '${item.product_image}')" class="hidden absolute top-4 right-4 z-20 bg-red-900/80 backdrop-blur text-white px-3 py-1.5 text-xs rounded-md font-semibold hover:bg-red-800 transition shadow-sm">Remove</button>
+                            
+                            <div class="overflow-hidden bg-gray-100 h-72 relative">
+                                <img src="${item.product_image}" alt="${item.product_name}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
                             </div>
-                            <p class="text-deeptext/70 text-sm mb-6 leading-relaxed">${item.product_description || 'Handcrafted bespoke design.'}</p>
-                            <button onclick="requestItem('${item.product_name}')" class="w-full border border-softborder text-mutedpurple py-2.5 rounded-lg font-semibold hover:border-dustyrose hover:text-dustyrose transition">
-                                Inquire About This Piece
-                            </button>
+                            <div class="p-6">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="text-2xl font-cormorant font-semibold text-mutedpurple">${item.product_name}</h4>
+                                    <span class="text-dustyrose font-semibold text-lg shrink-0">${displayPrice}</span>
+                                </div>
+                                <p class="text-deeptext/70 text-sm mb-6 line-clamp-2">${item.product_description || 'Handcrafted bespoke design.'}</p>
+                                <button onclick="requestItem('${item.product_name}')" class="w-full border border-softborder text-mutedpurple py-2.5 rounded-lg font-semibold hover:border-dustyrose hover:text-dustyrose transition">
+                                    Inquire About This
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                            </div>
                         </div>
                     </div>
                 `;
+                
+                container.innerHTML += html;
             });
             
             refreshAdminUIElements();
         }
 
+        // Remaining Admin and App Logic (Unchanged)
         function requestItem(itemName) {
             const subjectInput = document.getElementById('subjectLine');
             subjectInput.value = `Inquiry regarding the ${itemName}`;
@@ -268,7 +296,6 @@
             const errorElement = document.getElementById('login-error');
 
             errorElement.classList.add('hidden');
-
             const { error } = await _supabase.auth.signInWithPassword({ email, password });
 
             if (error) {
@@ -332,7 +359,6 @@
             const fileExtension = file.name.split('.').pop();
             const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${fileExtension}`;
 
-            // Step 1: Upload Image
             const { error: storageError } = await _supabase.storage
                 .from('product_images')
                 .upload(fileName, file);
@@ -349,7 +375,6 @@
                 .from('product_images')
                 .getPublicUrl(fileName);
 
-            // Step 2: Update Database
             const { error: dbError } = await _supabase
                 .from('products')
                 .insert([{
@@ -368,7 +393,6 @@
                 return;
             }
 
-            // Clear form
             document.getElementById('new-name').value = '';
             document.getElementById('new-category').value = '';
             document.getElementById('new-desc').value = '';
@@ -387,7 +411,6 @@
             const urlParts = imageUrl.split('/');
             const fileName = urlParts[urlParts.length - 1];
 
-            // Clean up image from storage
             const { error: storageError } = await _supabase.storage
                 .from('product_images')
                 .remove([fileName]);
@@ -396,7 +419,6 @@
                 console.warn('Storage image deletion failed, but attempting to remove database row anyway.', storageError);
             }
 
-            // Remove database row
             const { error: dbError } = await _supabase
                 .from('products')
                 .delete()
