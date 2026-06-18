@@ -29,11 +29,9 @@
     </script>
     <style>
         body { scroll-behavior: smooth; }
-        /* Hero gradient overlay for a soft, editorial feel */
         .hero-bg { 
             background: linear-gradient(135deg, rgba(253,251,247,1) 0%, rgba(234,228,222,0.4) 100%); 
         }
-        /* Scalloped edge decorative divider */
         .scallop-divider {
             height: 20px;
             background-image: radial-gradient(circle at 10px 0, transparent 10px, #FDFBF7 11px);
@@ -47,9 +45,7 @@
 
     <nav class="flex justify-between items-center px-6 md:px-10 py-5 bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full border border-softborder bg-dustyrose flex items-center justify-center text-white font-cormorant italic text-xl">
-                C
-            </div>
+            <div class="w-10 h-10 rounded-full border border-softborder bg-dustyrose flex items-center justify-center text-white font-cormorant italic text-xl">C</div>
             <div class="text-2xl font-semibold font-cormorant text-mutedpurple tracking-wide">A Crocheted Dream</div>
         </div>
         <a href="https://www.instagram.com/a_crocheted_dream" target="_blank" class="bg-dustyrose text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-rosehover transition shadow-sm">
@@ -69,8 +65,15 @@
     <div class="scallop-divider"></div>
 
     <section id="collections" class="py-24 px-6 max-w-7xl mx-auto">
-        <h2 class="text-5xl text-center mb-16 font-cormorant text-mutedpurple italic">Our Collections</h2>
+        <h2 class="text-5xl text-center mb-8 font-cormorant text-mutedpurple italic">Our Collections</h2>
         
+        <div class="mb-12 flex flex-col md:flex-row gap-6 items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-softborder">
+            <input id="searchInput" type="text" placeholder="Search creations..." class="w-full md:w-1/3 p-3 bg-parchment border border-softborder rounded-xl focus:ring-1 focus:ring-dustyrose focus:outline-none font-semibold text-mutedpurple transition" oninput="handleSearch(event)">
+            
+            <div id="category-filters" class="flex flex-wrap gap-2 justify-center md:justify-end w-full md:w-2/3">
+                </div>
+        </div>
+
         <div id="product-grid" class="columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8">
             </div>
     </section>
@@ -120,7 +123,8 @@
                     <div class="space-y-4">
                         <h4 class="text-xl font-cormorant text-white mb-2">New Addition</h4>
                         <input id="new-name" type="text" placeholder="Piece Name (e.g., Lavender Bunny)" class="w-full p-3 bg-black/20 border border-white/10 rounded-lg text-white focus:outline-none focus:border-dustyrose transition">
-                        <textarea id="new-desc" placeholder="Details & Materials" rows="3" class="w-full p-3 bg-black/20 border border-white/10 rounded-lg text-white focus:outline-none focus:border-dustyrose transition"></textarea>
+                        <input id="new-category" type="text" placeholder="Category (e.g., Plushies, Blankets)" class="w-full p-3 bg-black/20 border border-white/10 rounded-lg text-white focus:outline-none focus:border-dustyrose transition">
+                        <textarea id="new-desc" placeholder="Details & Materials" rows="2" class="w-full p-3 bg-black/20 border border-white/10 rounded-lg text-white focus:outline-none focus:border-dustyrose transition"></textarea>
                         <input id="new-price" type="number" placeholder="Price ($)" class="w-full p-3 bg-black/20 border border-white/10 rounded-lg text-white focus:outline-none focus:border-dustyrose transition">
                     </div>
                     <div class="flex flex-col justify-between">
@@ -128,7 +132,7 @@
                             <label class="block text-sm text-gray-400 mb-3">Showcase Image</label>
                             <input id="new-image-file" type="file" accept="image/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-2.5 file:px-5 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20 transition cursor-pointer">
                         </div>
-                        <button onclick="handleAddProduct()" class="w-full bg-dustyrose text-white py-3.5 rounded-lg font-semibold hover:bg-rosehover transition mt-6">Publish to Gallery</button>
+                        <button id="upload-submit-btn" onclick="handleAddProduct()" class="w-full bg-dustyrose text-white py-3.5 rounded-lg font-semibold hover:bg-rosehover transition mt-6">Publish to Gallery</button>
                     </div>
                 </div>
             </div>
@@ -141,10 +145,15 @@
 
     <script>
         // --- SUPABASE CONFIGURATION ---
-        const SUPABASE_URL = 'https://ohaowmbkfejvtpwivngh.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'sb_publishable_-Nm72Af9jo22hhu8efxxTA_hwGHNzjA';
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; 
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Global state for filtering
+        let allProducts = [];
+        let currentCategory = 'All';
+        let searchQuery = '';
 
         async function initSite() {
             checkUserSession();
@@ -165,27 +174,75 @@
                 return;
             }
 
-            if (!products || products.length === 0) {
-                grid.innerHTML = '<p class="text-center text-deeptext/60 w-full">The gallery is currently empty.</p>';
+            allProducts = products || [];
+            renderCategories();
+            renderGallery();
+        }
+
+        function renderCategories() {
+            const filterContainer = document.getElementById('category-filters');
+            filterContainer.innerHTML = '';
+
+            const categories = ['All', ...new Set(allProducts.map(p => p.category || 'Uncategorized').filter(c => c.trim() !== ''))];
+
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.innerText = cat;
+                
+                const baseStyle = "px-5 py-2 rounded-full text-sm font-semibold transition border shadow-sm ";
+                if (currentCategory === cat) {
+                    btn.className = baseStyle + "bg-dustyrose text-white border-dustyrose";
+                } else {
+                    btn.className = baseStyle + "bg-parchment text-mutedpurple border-softborder hover:border-dustyrose hover:text-dustyrose";
+                }
+                
+                btn.onclick = () => {
+                    currentCategory = cat;
+                    renderCategories();
+                    renderGallery();
+                };
+                filterContainer.appendChild(btn);
+            });
+        }
+
+        function handleSearch(event) {
+            searchQuery = event.target.value.toLowerCase();
+            renderGallery();
+        }
+
+        function renderGallery() {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+
+            const filteredProducts = allProducts.filter(item => {
+                const searchMatch = item.product_name.toLowerCase().includes(searchQuery) || 
+                                  (item.product_description && item.product_description.toLowerCase().includes(searchQuery));
+                const categoryMatch = currentCategory === 'All' || 
+                                    (item.category || 'Uncategorized') === currentCategory;
+                return searchMatch && categoryMatch;
+            });
+
+            if (filteredProducts.length === 0) {
+                grid.innerHTML = '<p class="text-center text-deeptext/60 w-full col-span-full">No pieces match your search.</p>';
                 return;
             }
 
-            grid.innerHTML = ''; 
-            products.forEach(item => {
+            filteredProducts.forEach(item => {
                 const displayPrice = typeof item.product_price === 'number' ? `$${item.product_price}` : item.product_price;
+                const badge = item.category ? `<span class="absolute top-4 left-4 bg-white/90 backdrop-blur text-mutedpurple px-3 py-1 text-xs rounded-md font-semibold shadow-sm z-10 border border-softborder">${item.category}</span>` : '';
                 
-                // Note the 'break-inside-avoid' class for CSS masonry layout
                 grid.innerHTML += `
                     <div class="break-inside-avoid mb-8 bg-white rounded-2xl overflow-hidden shadow-sm border border-softborder flex flex-col group relative">
-                        <button data-admin-only onclick="deleteProduct('${item.product_id}', '${item.product_image}')" class="hidden absolute top-4 right-4 z-10 bg-red-900/80 backdrop-blur text-white px-3 py-1.5 text-xs rounded-md font-semibold hover:bg-red-800 transition shadow-sm">Remove</button>
+                        ${badge}
+                        <button data-admin-only onclick="deleteProduct('${item.product_id}', '${item.product_image}')" class="hidden absolute top-4 right-4 z-20 bg-red-900/80 backdrop-blur text-white px-3 py-1.5 text-xs rounded-md font-semibold hover:bg-red-800 transition shadow-sm">Remove</button>
                         
                         <div class="overflow-hidden bg-parchment relative">
                             <img src="${item.product_image}" alt="${item.product_name}" class="w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
                         </div>
                         <div class="p-6 md:p-8">
-                            <div class="flex justify-between items-start mb-3">
+                            <div class="flex justify-between items-start mb-3 gap-2">
                                 <h4 class="text-2xl font-cormorant font-semibold text-mutedpurple leading-tight">${item.product_name}</h4>
-                                <span class="text-dustyrose font-semibold text-lg ml-4">${displayPrice}</span>
+                                <span class="text-dustyrose font-semibold text-lg shrink-0">${displayPrice}</span>
                             </div>
                             <p class="text-deeptext/70 text-sm mb-6 leading-relaxed">${item.product_description || 'Handcrafted bespoke design.'}</p>
                             <button onclick="requestItem('${item.product_name}')" class="w-full border border-softborder text-mutedpurple py-2.5 rounded-lg font-semibold hover:border-dustyrose hover:text-dustyrose transition">
@@ -256,26 +313,35 @@
 
         async function handleAddProduct() {
             const name = document.getElementById('new-name').value;
+            const category = document.getElementById('new-category').value;
             const desc = document.getElementById('new-desc').value;
             const price = document.getElementById('new-price').value;
             const fileInput = document.getElementById('new-image-file');
+            const submitBtn = document.getElementById('upload-submit-btn');
 
             if (!name || !price || fileInput.files.length === 0) {
                 alert('Please provide a name, price, and image.');
                 return;
             }
 
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = 'Publishing...';
+            submitBtn.disabled = true;
+
             const file = fileInput.files[0];
             const fileExtension = file.name.split('.').pop();
             const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${fileExtension}`;
 
+            // Step 1: Upload Image
             const { error: storageError } = await _supabase.storage
                 .from('product_images')
                 .upload(fileName, file);
 
             if (storageError) {
-                alert('Image upload failed.');
+                alert('Image upload failed. Check Storage Bucket RLS Policies.');
                 console.error(storageError);
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
                 return;
             }
 
@@ -283,25 +349,34 @@
                 .from('product_images')
                 .getPublicUrl(fileName);
 
+            // Step 2: Update Database
             const { error: dbError } = await _supabase
                 .from('products')
                 .insert([{
                     product_name: name,
+                    category: category,
                     product_description: desc,
                     product_price: parseFloat(price),
                     product_image: publicUrl
                 }]);
 
             if (dbError) {
-                alert('Database update failed.');
+                alert('Database update failed. Check Table RLS Policies.');
                 console.error(dbError);
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
                 return;
             }
 
+            // Clear form
             document.getElementById('new-name').value = '';
+            document.getElementById('new-category').value = '';
             document.getElementById('new-desc').value = '';
             document.getElementById('new-price').value = '';
             fileInput.value = '';
+            
+            submitBtn.innerText = originalText;
+            submitBtn.disabled = false;
 
             await fetchProducts();
         }
@@ -312,18 +387,27 @@
             const urlParts = imageUrl.split('/');
             const fileName = urlParts[urlParts.length - 1];
 
-            await _supabase.storage.from('product_images').remove([fileName]);
+            // Clean up image from storage
+            const { error: storageError } = await _supabase.storage
+                .from('product_images')
+                .remove([fileName]);
+                
+            if (storageError) {
+                console.warn('Storage image deletion failed, but attempting to remove database row anyway.', storageError);
+            }
 
-            const { error } = await _supabase
+            // Remove database row
+            const { error: dbError } = await _supabase
                 .from('products')
                 .delete()
                 .eq('product_id', productId);
 
-            if (error) {
-                alert('Error deleting item.');
-                console.error(error);
+            if (dbError) {
+                alert('Error deleting item from database. Check Table RLS Policies.');
+                console.error(dbError);
                 return;
             }
+            
             await fetchProducts();
         }
 
