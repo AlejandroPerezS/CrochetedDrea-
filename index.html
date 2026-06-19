@@ -45,7 +45,7 @@
 
     <nav class="flex justify-between items-center px-6 md:px-10 py-5 bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full border border-softborder bg-dustyrose flex items-center justify-center text-white font-cormorant italic text-xl">C</div>
+            <img src="logo.png" alt="A Crocheted Dream Logo" class="w-12 h-12 rounded-full border border-softborder object-cover bg-white shadow-sm">
             <div class="text-2xl font-semibold font-cormorant text-mutedpurple tracking-wide">A Crocheted Dream</div>
         </div>
         <a href="https://www.instagram.com/a_crocheted_dream" target="_blank" class="bg-dustyrose text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-rosehover transition shadow-sm">
@@ -142,8 +142,8 @@
 
     <script>
         // --- SUPABASE CONFIGURATION ---
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; 
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const SUPABASE_URL = 'https://ohaowmbkfejvtpwivngh.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // MUST REPLACE THIS
 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -283,7 +283,6 @@
             refreshAdminUIElements();
         }
 
-        // Remaining Admin and App Logic (Unchanged)
         function requestItem(itemName) {
             const subjectInput = document.getElementById('subjectLine');
             subjectInput.value = `Inquiry regarding the ${itemName}`;
