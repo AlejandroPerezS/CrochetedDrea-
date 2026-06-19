@@ -79,18 +79,18 @@
         <div class="max-w-3xl mx-auto bg-white p-10 md:p-14 rounded-[2rem] shadow-sm border border-softborder">
             <h2 class="text-4xl text-center mb-4 font-cormorant text-mutedpurple">Product Inquiry</h2>
             <p class="text-center text-deeptext/70 mb-10">Found a piece you adore? Specify the item and any custom requests below.</p>
-            
-            <form action="https://formspree.io/f/xnjwgkbo" method="POST" class="space-y-5">
+                        
+            <form id="inquiry-form" onsubmit="handleInquirySubmit(event)" class="space-y-5">
                 <input id="subjectLine" name="Subject" type="text" placeholder="I'm interested in..." class="w-full p-4 bg-parchment border border-softborder rounded-xl focus:ring-1 focus:ring-dustyrose focus:outline-none font-semibold text-mutedpurple transition">
-
+            
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <input type="text" name="Name" placeholder="Your Name" required class="w-full p-4 bg-parchment border border-softborder rounded-xl focus:ring-1 focus:ring-dustyrose focus:outline-none transition">
                     <input type="email" name="Email" placeholder="Email Address" required class="w-full p-4 bg-parchment border border-softborder rounded-xl focus:ring-1 focus:ring-dustyrose focus:outline-none transition">
                 </div>
-
+            
                 <textarea name="Message" placeholder="Any specific colors or bespoke sizing requests?" rows="4" class="w-full p-4 bg-parchment border border-softborder rounded-xl focus:ring-1 focus:ring-dustyrose focus:outline-none transition"></textarea>
-
-                <button type="submit" class="w-full bg-dustyrose text-white font-semibold py-4 rounded-xl hover:bg-rosehover transition shadow-sm text-lg">Send Inquiry</button>
+            
+                <button type="submit" class="w-full bg-dustyrose text-white font-semibold py-4 rounded-xl hover:bg-rosehover transition shadow-sm text-lg">Message on WhatsApp</button>
             </form>
         </div>
     </section>
@@ -179,6 +179,40 @@
         function handleSearch(event) {
             searchQuery = event.target.value.toLowerCase();
             renderGallery();
+        }
+        function handleInquirySubmit(event) {
+            event.preventDefault(); // Prevents the page from reloading
+            
+            const form = event.target;
+            const formData = new FormData(form);
+        
+            // 1. Get the values from the form (with fallbacks just in case)
+            const name = formData.get('Name') || 'A Customer';
+            const product = formData.get('Subject') || 'A piece from the gallery';
+            const email = formData.get('Email') || 'No email provided';
+            const message = formData.get('Message') || '';
+            
+            // 2. IMPORTANT: Change this to her actual number. 
+            // Use 1 + Area Code (e.g., 289, 905, 647) + Number. No spaces or dashes.
+            const momPhone = "12895550123"; 
+        
+            // 3. Build a beautifully formatted WhatsApp ticket
+            let whatsappText = `*New Inquiry: A Crocheted Dream* 🧶\n\n`;
+            whatsappText += `*Name:* ${name}\n`;
+            whatsappText += `*Email:* ${email}\n`;
+            whatsappText += `*Interested In:* ${product}\n`;
+            
+            // Only add the details section if they actually typed a message
+            if (message.trim() !== "") {
+                whatsappText += `\n*Details / Custom Request:*\n${message}`;
+            }
+        
+            // 4. Encode and open the WhatsApp chat
+            const whatsappUrl = `https://wa.me/${momPhone}?text=${encodeURIComponent(whatsappText)}`;
+            window.open(whatsappUrl, '_blank');
+        
+            // 5. Cleanup the form on the website
+            form.reset(); 
         }
 
         // Toggle specific category visibility
