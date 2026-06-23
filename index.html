@@ -208,7 +208,7 @@
             const email = formData.get('Email') || 'No email provided';
             const message = formData.get('Message') || '';
             
-            const momPhone = "5926621473"; 
+            const whtsPhone = "5926218292"; 
         
             // 3. Build a beautifully formatted WhatsApp ticket
             let whatsappText = `*New Inquiry: A Crocheted Dream* 🧶\n\n`;
@@ -222,7 +222,7 @@
             }
         
             // 4. Encode and open the WhatsApp chat
-            const whatsappUrl = `https://wa.me/${momPhone}?text=${encodeURIComponent(whatsappText)}`;
+            const whatsappUrl = `https://wa.me/${whtsPhone}?text=${encodeURIComponent(whatsappText)}`;
             window.open(whatsappUrl, '_blank');
         
             // 5. Cleanup the form on the website
