@@ -1,0 +1,16 @@
+name = "crocheted-dream"
+main = "src/worker.js"
+compatibility_date = "2026-10-01"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "crocheted-dream"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[[r2_buckets]]
+binding = "PRODUCT_IMAGES"
+bucket_name = "crocheted-dream-product-images"
