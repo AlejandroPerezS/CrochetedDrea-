@@ -1,0 +1,13 @@
+{
+  "name": "crocheted-dream-cloudflare",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 execute crocheted-dream --local --file=./schema.sql",
+    "db:remote": "wrangler d1 execute crocheted-dream --remote --file=./schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.45.0"
+  }
+}
