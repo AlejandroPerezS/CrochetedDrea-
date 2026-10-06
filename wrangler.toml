@@ -9,7 +9,7 @@ binding = "ASSETS"
 [[d1_databases]]
 binding = "DB"
 database_name = "crocheted-dream"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "a4255141-e362-4689-9d60-ff6cfe48f2d9"
 
 [[r2_buckets]]
 binding = "PRODUCT_IMAGES"
