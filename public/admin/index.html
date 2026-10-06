@@ -9,139 +9,146 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--paper:#f7f3ef;--white:#fff;--purple:#75657d;--rose:#a8828d;--ink:#43373b;--muted:#7c7175;--line:#e7dfd9;--danger:#a24848;--green:#39705a;--shadow:0 20px 60px rgba(57,43,49,.1)}*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--paper);color:var(--ink);font-family:Nunito,sans-serif}h1,h2,h3{font-family:"Cormorant Garamond",serif}.login{min-height:100vh;display:grid;place-items:center;padding:22px}.login-card{width:min(430px,100%);background:white;border:1px solid var(--line);border-radius:28px;padding:30px;box-shadow:var(--shadow)}.login-card h1{font-size:2.4rem;margin:0 0 4px;color:var(--purple)}.login-card p{color:var(--muted);margin:0 0 22px}.app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}.side{position:sticky;top:0;height:100vh;padding:24px 18px;background:#30282c;color:white}.side h2{font-size:1.8rem;line-height:1;margin:0 0 8px}.side small{color:#c9bec2}.nav{display:grid;gap:8px;margin-top:28px}.nav button,.logout{border:0;border-radius:13px;padding:12px 14px;background:transparent;color:#e8dfe2;text-align:left;font:800 .82rem Nunito,sans-serif;cursor:pointer}.nav button.active{background:#4a3d43;color:white}.logout{position:absolute;bottom:20px;left:18px;right:18px;border:1px solid rgba(255,255,255,.15)}.main{padding:26px}.top{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:22px}.top h1{font-size:2.7rem;margin:0;color:var(--purple)}.top p{margin:3px 0 0;color:var(--muted)}.badge{padding:9px 12px;border-radius:999px;background:#e9f3ed;color:var(--green);font-size:.72rem;font-weight:900}.view{display:none}.view.active{display:block}.grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:20px}.panel{background:white;border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 12px 36px rgba(57,43,49,.045)}.panel h3{font-size:1.8rem;margin:0 0 4px}.panel>p{margin:0 0 18px;color:var(--muted);font-size:.83rem}.fields{display:grid;gap:13px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:grid;gap:6px}.field label{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:13px;padding:11px 12px;background:#fff;font:600 .87rem Nunito,sans-serif;color:var(--ink);outline:0}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--rose)}.checks{display:flex;gap:18px;flex-wrap:wrap;font-size:.82rem}.buttons{display:flex;gap:9px;flex-wrap:wrap}.btn{border:1px solid var(--line);border-radius:999px;padding:11px 15px;background:white;color:var(--ink);font:800 .78rem Nunito,sans-serif;cursor:pointer}.btn.primary{background:var(--purple);border-color:var(--purple);color:white}.btn.danger{color:var(--danger)}.status{min-height:18px;font-size:.76rem;color:var(--muted);margin-top:10px}.list{display:grid;gap:10px}.row{display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:17px;padding:10px}.thumb{width:62px;height:62px;border-radius:13px;background:#eee5e1;overflow:hidden;display:grid;place-items:center;color:var(--purple)}.thumb img{width:100%;height:100%;object-fit:cover}.row h4{margin:0 0 4px;font-size:.96rem}.row p{margin:0;color:var(--muted);font-size:.72rem}.row-actions{display:flex;gap:6px}.row-actions button{border:1px solid var(--line);background:white;border-radius:10px;padding:8px 10px;cursor:pointer}.empty{padding:38px 16px;text-align:center;border:1px dashed var(--line);border-radius:18px;color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}.stat{background:white;border:1px solid var(--line);border-radius:20px;padding:20px}.stat span{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:900}.stat strong{display:block;font:700 2.1rem "Cormorant Garamond",serif;color:var(--purple);margin-top:5px}.preview{min-height:170px;border:1px dashed var(--line);border-radius:16px;display:grid;place-items:center;overflow:hidden;color:var(--muted);font-size:.8rem;background:#faf8f6}.preview img{width:100%;height:170px;object-fit:cover}.mobile{display:none}@media(max-width:980px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr 1fr}}@media(max-width:720px){.app{grid-template-columns:1fr}.side{position:fixed;z-index:50;width:250px;transform:translateX(-100%);transition:.2s}.side.open{transform:translateX(0)}.main{padding:16px}.mobile{display:inline-flex}.top{align-items:start}.top h1{font-size:2.2rem}.two{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.row{grid-template-columns:52px 1fr}.thumb{width:52px;height:52px}.row-actions{grid-column:2}}
+:root{--paper:#f7f3ef;--white:#fff;--purple:#75657d;--rose:#a8828d;--ink:#43373b;--muted:#7c7175;--line:#e7dfd9;--danger:#a24848;--green:#39705a;--greenbg:#e9f4ee;--full:#9a5555;--fullbg:#f8eaea;--blocked:#6e6469;--blockedbg:#eee9eb;--shadow:0 20px 60px rgba(57,43,49,.1)}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--paper);color:var(--ink);font-family:Nunito,sans-serif}button,input,textarea,select{font:inherit}h1,h2,h3{font-family:"Cormorant Garamond",serif}
+.login{min-height:100vh;display:grid;place-items:center;padding:22px}.login-card{width:min(430px,100%);background:white;border:1px solid var(--line);border-radius:28px;padding:30px;box-shadow:var(--shadow)}.login-brand{display:flex;align-items:center;gap:14px;margin-bottom:18px}.login-brand img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:1px solid var(--line)}.login-card h1{font-size:2.4rem;margin:0;color:var(--purple)}.login-card p{color:var(--muted);margin:4px 0 22px}
+.app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}.side{position:sticky;top:0;height:100vh;padding:24px 18px;background:#30282c;color:white}.side-brand{display:flex;align-items:center;gap:12px}.side-brand img{width:54px;height:54px;border-radius:50%;object-fit:cover;background:#fff}.side h2{font-size:1.7rem;line-height:1;margin:0}.side small{color:#c9bec2}.nav{display:grid;gap:8px;margin-top:28px}.nav button,.logout{border:0;border-radius:13px;padding:12px 14px;background:transparent;color:#e8dfe2;text-align:left;font:800 .82rem Nunito,sans-serif;cursor:pointer}.nav button.active{background:#4a3d43;color:white}.logout{position:absolute;bottom:20px;left:18px;right:18px;border:1px solid rgba(255,255,255,.15)}
+.main{padding:26px}.top{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:22px}.top h1{font-size:2.7rem;margin:0;color:var(--purple)}.top p{margin:3px 0 0;color:var(--muted)}.badge{padding:9px 12px;border-radius:999px;background:#e9f3ed;color:var(--green);font-size:.72rem;font-weight:900}.view{display:none}.view.active{display:block}.grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:20px}.panel{background:white;border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 12px 36px rgba(57,43,49,.045)}.panel h3{font-size:1.8rem;margin:0 0 4px}.panel>p{margin:0 0 18px;color:var(--muted);font-size:.83rem}.fields{display:grid;gap:13px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:grid;gap:6px}.field label{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:13px;padding:11px 12px;background:#fff;font:600 .87rem Nunito,sans-serif;color:var(--ink);outline:0}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--rose)}.checks{display:flex;gap:18px;flex-wrap:wrap;font-size:.82rem}.buttons{display:flex;gap:9px;flex-wrap:wrap}.btn{border:1px solid var(--line);border-radius:999px;padding:11px 15px;background:white;color:var(--ink);font:800 .78rem Nunito,sans-serif;cursor:pointer}.btn.primary{background:var(--purple);border-color:var(--purple);color:white}.btn.danger{color:var(--danger)}.status{min-height:18px;font-size:.76rem;color:var(--muted);margin-top:10px}.list{display:grid;gap:10px}.row{display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:17px;padding:10px}.thumb{width:62px;height:62px;border-radius:13px;background:#eee5e1;overflow:hidden;display:grid;place-items:center;color:var(--purple)}.thumb img{width:100%;height:100%;object-fit:cover}.row h4{margin:0 0 4px;font-size:.96rem}.row p{margin:0;color:var(--muted);font-size:.72rem}.row-actions{display:flex;gap:6px}.row-actions button{border:1px solid var(--line);background:white;border-radius:10px;padding:8px 10px;cursor:pointer}.empty{padding:38px 16px;text-align:center;border:1px dashed var(--line);border-radius:18px;color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}.stat{background:white;border:1px solid var(--line);border-radius:20px;padding:20px}.stat span{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:900}.stat strong{display:block;font:700 2.1rem "Cormorant Garamond",serif;color:var(--purple);margin-top:5px}.preview{min-height:170px;border:1px dashed var(--line);border-radius:16px;display:grid;place-items:center;overflow:hidden;color:var(--muted);font-size:.8rem;background:#faf8f6}.preview img{width:100%;height:170px;object-fit:cover}
+.calendar-panel{display:grid;grid-template-columns:1.35fr .65fr;gap:20px}.cal-shell{background:white;border:1px solid var(--line);border-radius:24px;padding:20px}.cal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.cal-head h3{font-size:2rem;margin:0}.cal-navs{display:flex;gap:7px}.cal-nav{width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:white;cursor:pointer;font-size:1.1rem}.week,.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.week span{text-align:center;color:var(--muted);font-size:.65rem;font-weight:900;padding:4px}.day{min-height:88px;border:1px solid var(--line);border-radius:14px;background:white;padding:9px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;cursor:pointer;color:var(--ink);transition:.15s}.day:hover{border-color:var(--rose);transform:translateY(-1px)}.day.blank{border:0;background:transparent;cursor:default}.day.available{background:var(--greenbg);color:var(--green)}.day.full{background:var(--fullbg);color:var(--full)}.day.blocked{background:var(--blockedbg);color:var(--blocked)}.day.past{opacity:.46}.day.selected{outline:3px solid var(--purple);outline-offset:1px}.day b{font-size:.88rem}.day small{font-size:.56rem;text-transform:uppercase;font-weight:900;letter-spacing:.04em}.day em{font-style:normal;font-size:.62rem;color:inherit}.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;color:var(--muted);font-size:.7rem}.legend span{display:flex;align-items:center;gap:6px}.dot{width:10px;height:10px;border-radius:50%;display:inline-block}.dot.available{background:var(--green)}.dot.full{background:var(--full)}.dot.blocked{background:var(--blocked)}.date-card{background:white;border:1px solid var(--line);border-radius:24px;padding:22px;align-self:start;position:sticky;top:26px}.date-card h3{font-size:1.9rem;margin:0 0 4px}.date-card>p{margin:0 0 18px;color:var(--muted);font-size:.82rem}.date-summary{padding:12px;border-radius:14px;background:var(--paper);margin-bottom:15px}.date-summary strong{display:block;font-size:1rem}.date-summary span{font-size:.75rem;color:var(--muted)}.mobile{display:none}
+@media(max-width:980px){.grid,.calendar-panel{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.date-card{position:static}}@media(max-width:720px){.app{grid-template-columns:1fr}.side{position:fixed;z-index:50;width:250px;transform:translateX(-100%);transition:.2s}.side.open{transform:translateX(0)}.main{padding:16px}.mobile{display:inline-flex}.top{align-items:start}.top h1{font-size:2.2rem}.two{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.row{grid-template-columns:52px 1fr}.thumb{width:52px;height:52px}.row-actions{grid-column:2}.day{min-height:66px;padding:6px}.day em{display:none}.week,.cal-grid{gap:4px}}
 </style>
 </head>
 <body>
-<section class="login" id="login"><form class="login-card" id="loginForm"><h1>Store dashboard</h1><p>Manage the fresh A Crocheted Dream catalogue, stock and availability.</p><div class="fields"><div class="field"><label>Username</label><input name="username" autocomplete="username" required></div><div class="field"><label>Password</label><input name="password" type="password" autocomplete="current-password" required></div><button class="btn primary" type="submit">Sign in</button></div><div class="status" id="loginStatus"></div></form></section>
+<section class="login" id="login">
+  <form class="login-card" id="loginForm">
+    <div class="login-brand"><img src="/assets/crocheted-dream-logo.webp" alt="A Crocheted Dream logo"><div><h1>Store dashboard</h1><p>Products, stock and order availability.</p></div></div>
+    <div class="fields"><div class="field"><label>Username</label><input name="username" autocomplete="username" required></div><div class="field"><label>Password</label><input name="password" type="password" autocomplete="current-password" required></div><button class="btn primary" type="submit">Sign in</button></div>
+    <div class="status" id="loginStatus"></div>
+  </form>
+</section>
+
 <div class="app" id="app" hidden>
-<aside class="side" id="side"><h2>A Crocheted<br>Dream</h2><small>Cloudflare store admin</small><div class="nav"><button class="active" data-view="overview">Overview</button><button data-view="products">Products</button><button data-view="availability">Availability</button></div><button class="logout" id="logout">Sign out</button></aside>
-<main class="main"><header class="top"><div><button class="btn mobile" id="menu">Menu</button><h1 id="title">Overview</h1><p>Private dashboard · changes publish to the live store.</p></div><span class="badge">Authenticated</span></header>
-<section class="view active" id="overview"><div class="stats"><div class="stat"><span>Products</span><strong id="statProducts">0</strong></div><div class="stat"><span>In stock</span><strong id="statStock">0</strong></div><div class="stat"><span>Made to order</span><strong id="statMto">0</strong></div></div><div class="panel"><h3>Fresh catalogue</h3><p>No Supabase items are imported. This store starts empty and every product is created here.</p><div class="buttons"><button class="btn primary" data-jump="products">Add the first product</button><button class="btn" type="button" id="runDiagnostics">Test D1 + R2</button></div><div class="status" id="diagnosticsStatus"></div></div></section>
-<section class="view" id="products"><div class="grid"><div class="panel"><h3 id="productHeading">Add product</h3><p>Images are converted to WebP before upload.</p><form id="productForm"><input type="hidden" name="id"><input type="hidden" name="imagePath"><div class="fields"><div class="field"><label>Name</label><input name="name" maxlength="160" required></div><div class="two"><div class="field"><label>Category</label><input name="category" maxlength="100"></div><div class="field"><label>Price (GYD)</label><input name="price" type="number" min="0" step="1" required></div></div><div class="field"><label>Description</label><textarea name="description" rows="4" maxlength="4000"></textarea></div><div class="two"><div class="field"><label>Stock quantity</label><input name="stockQuantity" type="number" min="0" step="1" value="0" required></div><div class="field"><label>Display order <span style="font-weight:600;text-transform:none;letter-spacing:0">(lower shows first)</span></label><input name="sortOrder" type="number" step="1" value="0"></div></div><div class="field"><label>Product image</label><input id="image" type="file" accept="image/*"></div><div class="preview" id="preview">Image preview</div><div class="checks"><label><input name="featured" type="checkbox"> Featured</label><label><input name="published" type="checkbox" checked> Published</label></div><div class="buttons"><button class="btn primary" type="submit">Save product</button><button class="btn" type="button" id="cancel" hidden>Cancel edit</button></div></div><div class="status" id="productStatus"></div></form></div><div class="panel"><h3>Products</h3><p>Published items appear on the storefront and can be selected for the random homepage image.</p><div class="list" id="list"></div></div></div></section>
-<section class="view" id="availability"><div class="grid"><div class="panel"><h3>Set a date</h3><p>Available is the default. Use Full or Blocked when a made-to-order date cannot be accepted.</p><form id="availabilityForm"><div class="fields"><div class="field"><label>Date</label><input name="date" type="date" required></div><div class="field"><label>Status</label><select name="status"><option value="available">Available</option><option value="full">Full</option><option value="blocked">Blocked</option></select></div><div class="field"><label>Current order count</label><input name="orderCount" type="number" min="0" step="1" value="0"></div><div class="field"><label>Notes</label><textarea name="notes" rows="3"></textarea></div><button class="btn primary" type="submit">Save date</button></div><div class="status" id="availabilityStatus"></div></form></div><div class="panel"><h3>Upcoming overrides</h3><p>Only dates you explicitly changed are listed here.</p><div class="list" id="availabilityList"></div></div></div></section>
-</main></div>
+<aside class="side" id="side">
+  <div class="side-brand"><img src="/assets/crocheted-dream-logo.webp" alt=""><div><h2>A Crocheted<br>Dream</h2><small>Store admin</small></div></div>
+  <div class="nav"><button class="active" data-view="overview">Overview</button><button data-view="products">Products</button><button data-view="availability">Availability</button></div>
+  <button class="logout" id="logout">Sign out</button>
+</aside>
+<main class="main">
+<header class="top"><div><button class="btn mobile" id="menu">Menu</button><h1 id="title">Overview</h1><p>Private dashboard · changes publish to the live store.</p></div><span class="badge">Authenticated</span></header>
+
+<section class="view active" id="overview">
+  <div class="stats"><div class="stat"><span>Products</span><strong id="statProducts">0</strong></div><div class="stat"><span>In stock</span><strong id="statStock">0</strong></div><div class="stat"><span>Made to order</span><strong id="statMto">0</strong></div></div>
+  <div class="panel"><h3>Fresh catalogue</h3><p>Stock status is automatic: any quantity above zero shows In Stock; zero shows Made to Order.</p><div class="buttons"><button class="btn primary" data-jump="products">Add a product</button><button class="btn" type="button" id="runDiagnostics">Test D1 + R2</button></div><div class="status" id="diagnosticsStatus"></div></div>
+</section>
+
+<section class="view" id="products">
+<div class="grid">
+  <div class="panel">
+    <h3 id="productHeading">Add product</h3><p>Set current stock here. Images are resized and converted to WebP before R2 upload.</p>
+    <form id="productForm"><input type="hidden" name="id"><input type="hidden" name="imagePath">
+      <div class="fields">
+        <div class="field"><label>Name</label><input name="name" maxlength="160" required></div>
+        <div class="two"><div class="field"><label>Category</label><input name="category" maxlength="100"></div><div class="field"><label>Price (GYD)</label><input name="price" type="number" min="0" step="1" required></div></div>
+        <div class="field"><label>Description</label><textarea name="description" rows="4" maxlength="4000"></textarea></div>
+        <div class="two"><div class="field"><label>Stock quantity</label><input name="stockQuantity" type="number" min="0" step="1" value="0" required></div><div class="field"><label>Display order <span style="font-weight:600;text-transform:none;letter-spacing:0">(lower shows first)</span></label><input name="sortOrder" type="number" step="1" value="0"></div></div>
+        <div class="field"><label>Product image</label><input id="image" type="file" accept="image/*"></div><div class="preview" id="preview">Image preview</div>
+        <div class="checks"><label><input name="featured" type="checkbox"> Featured</label><label><input name="published" type="checkbox" checked> Published</label></div>
+        <div class="buttons"><button class="btn primary" type="submit">Save product</button><button class="btn" type="button" id="cancel" hidden>Cancel edit</button></div>
+      </div>
+      <div class="status" id="productStatus"></div>
+    </form>
+  </div>
+  <div class="panel"><h3>Products</h3><p>Edit stock at any time. Customer status changes automatically from the stock number.</p><div class="list" id="list"></div></div>
+</div>
+</section>
+
+<section class="view" id="availability">
+<div class="calendar-panel">
+  <div class="cal-shell">
+    <div class="cal-head"><div><p class="eyebrow" style="margin:0 0 4px;color:var(--rose);font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;font-weight:900">Workload calendar</p><h3 id="adminMonth"></h3></div><div class="cal-navs"><button class="cal-nav" id="adminPrev" aria-label="Previous month">‹</button><button class="cal-nav" id="adminToday">Today</button><button class="cal-nav" id="adminNext" aria-label="Next month">›</button></div></div>
+    <div class="week"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+    <div class="cal-grid" id="adminCalendar"></div>
+    <div class="legend"><span><i class="dot available"></i>Available</span><span><i class="dot full"></i>Full</span><span><i class="dot blocked"></i>Blocked</span></div>
+  </div>
+  <aside class="date-card">
+    <h3 id="dateHeading">Select a date</h3><p>Click a calendar day to manage workload.</p>
+    <form id="availabilityForm">
+      <div class="date-summary"><strong id="dateSummary">No date selected</strong><span id="dateCurrent">Choose a day on the calendar.</span></div>
+      <div class="fields">
+        <div class="field"><label>Date</label><input name="date" id="availabilityDate" type="date" readonly required></div>
+        <div class="field"><label>Orders due that day</label><input name="orderCount" id="availabilityCount" type="number" min="0" step="1" value="0"></div>
+        <div class="field"><label>Status</label><select name="status" id="availabilityStatusSelect"><option value="available">Available</option><option value="full">Full</option><option value="blocked">Blocked / Unavailable</option></select></div>
+        <div class="field"><label>Notes</label><textarea name="notes" id="availabilityNotes" rows="4" placeholder="Optional private workload note"></textarea></div>
+        <button class="btn primary" type="submit">Save availability</button>
+      </div>
+      <div class="status" id="availabilityStatus"></div>
+    </form>
+  </aside>
+</div>
+</section>
+</main>
+</div>
+
 <script>
 (function(){
-var products=[],login=document.getElementById("login"),app=document.getElementById("app"),form=document.getElementById("productForm"),list=document.getElementById("list"),preview=document.getElementById("preview"),imageInput=document.getElementById("image");
-async function api(url,init){
-  var response;
-  try{
-    response=await fetch(new URL(url,location.origin).toString(),Object.assign({
-      credentials:"same-origin",
-      cache:"no-store"
-    },init||{}));
-  }catch(error){
-    var networkError=new Error("Network request failed before the Worker returned a response.");
-    networkError.cause=error;
-    networkError.network=true;
-    throw networkError;
-  }
-  var text=await response.text(),data={};
-  try{data=text?JSON.parse(text):{}}catch(_){data={error:text||("HTTP "+response.status)}}
-  if(!response.ok){
-    var requestError=new Error(data.error||("Request failed with HTTP "+response.status));
-    requestError.status=response.status;
-    throw requestError;
-  }
-  return data;
-}
-function setAuth(ok){login.hidden=ok;app.hidden=!ok;login.style.display=ok?"none":"grid";app.style.display=ok?"grid":"none";document.body.style.overflow=ok?"":"hidden";if(ok){window.scrollTo({top:0,left:0,behavior:"instant"})}}
-async function session(){try{await api("/api/admin/session");setAuth(true)}catch(e){setAuth(false);return}try{await loadProducts();await loadAvailability()}catch(e){console.error("Dashboard data load failed",e)}}
-document.getElementById("loginForm").addEventListener("submit",async function(e){e.preventDefault();var fd=new FormData(e.target),s=document.getElementById("loginStatus");s.textContent="Signing in…";try{await api("/api/admin/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:fd.get("username"),password:fd.get("password")})});s.textContent="";setAuth(true)}catch(err){s.textContent=err.message;return}try{await loadProducts();await loadAvailability()}catch(err){console.error("Dashboard data load failed",err)}});
-document.getElementById("logout").addEventListener("click",async function(){await api("/api/admin/logout",{method:"POST"}).catch(function(){});location.reload()});
-function show(id){document.querySelectorAll(".view").forEach(function(x){x.classList.toggle("active",x.id===id)});document.querySelectorAll("[data-view]").forEach(function(x){x.classList.toggle("active",x.dataset.view===id)});document.getElementById("title").textContent=id.charAt(0).toUpperCase()+id.slice(1);document.getElementById("side").classList.remove("open")}
-document.querySelectorAll("[data-view]").forEach(function(b){b.addEventListener("click",function(){show(b.dataset.view)})});document.querySelectorAll("[data-jump]").forEach(function(b){b.addEventListener("click",function(){show(b.dataset.jump)})});
-document.getElementById("runDiagnostics").addEventListener("click",async function(){
-  var s=document.getElementById("diagnosticsStatus");
-  s.textContent="Testing D1 and R2…";
-  try{
-    var d=await api("/api/admin/diagnostics");
-    s.textContent="DB binding: "+(d.databaseBinding?"YES":"NO")+" · D1: "+(d.database?"OK":"FAIL")+" · R2 binding: "+(d.r2Binding?"YES":"NO")+" · R2: "+(d.r2?"OK":"FAIL")+(d.errors&&d.errors.length?" · "+d.errors.join(" | "):"");
-  }catch(err){
-    s.textContent=err.message;
-  }
-});document.getElementById("menu").addEventListener("click",function(){document.getElementById("side").classList.toggle("open")});
+let products=[],availabilityRows=[],adminMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1),selectedDate="";
+const login=document.getElementById("login"),app=document.getElementById("app"),form=document.getElementById("productForm"),list=document.getElementById("list"),preview=document.getElementById("preview"),imageInput=document.getElementById("image"),adminCalendar=document.getElementById("adminCalendar");
+function pad(n){return String(n).padStart(2,"0")}function isoDate(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}function dateHuman(v){if(!v)return"";const[y,m,d]=v.split("-").map(Number);return new Intl.DateTimeFormat("en-US",{month:"long",day:"numeric",year:"numeric"}).format(new Date(y,m-1,d))}
+function esc(v){return String(v==null?"":v).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]))}
 function money(c){return "GYD $"+Math.round((c||0)/100).toLocaleString("en-GY")}
-function esc(v){return String(v==null?"":v).replace(/[&<>'"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]})}
-function stats(){document.getElementById("statProducts").textContent=products.length;document.getElementById("statStock").textContent=products.filter(function(p){return p.stockQuantity>0}).length;document.getElementById("statMto").textContent=products.filter(function(p){return p.stockQuantity===0}).length}
-async function loadProducts(){var d=await api("/api/admin/products");products=d.products||[];stats();renderProducts()}
-function renderProducts(){if(!products.length){list.innerHTML='<div class="empty">No products yet. Add the customer’s new catalogue here.</div>';return}list.innerHTML=products.map(function(p){var img=p.imagePath?'<img src="'+esc(p.imagePath)+'" alt="">':"🧶";return '<div class="row"><div class="thumb">'+img+'</div><div><h4>'+esc(p.name)+'</h4><p>'+money(p.priceCents)+' · '+(p.stockQuantity>0?p.stockQuantity+" in stock":"Made to order")+' · '+(p.published?"Published":"Hidden")+'</p></div><div class="row-actions"><button data-edit="'+p.id+'">Edit</button><button data-delete="'+p.id+'">Delete</button></div></div>'}).join("")}
-list.addEventListener("click",async function(e){var edit=e.target.closest("[data-edit]"),del=e.target.closest("[data-delete]");if(edit){var p=products.find(function(x){return String(x.id)===edit.dataset.edit});if(!p)return;form.elements.id.value=p.id;form.elements.imagePath.value=p.imagePath||"";form.elements.name.value=p.name;form.elements.category.value=p.category||"";form.elements.price.value=Math.round((p.priceCents||0)/100);form.elements.description.value=p.description||"";form.elements.stockQuantity.value=p.stockQuantity||0;form.elements.sortOrder.value=p.sortOrder||0;form.elements.featured.checked=!!p.featured;form.elements.published.checked=!!p.published;document.getElementById("productHeading").textContent="Edit product";document.getElementById("cancel").hidden=false;preview.innerHTML=p.imagePath?'<img src="'+esc(p.imagePath)+'" alt="">':"Image preview";show("products");window.scrollTo({top:0,behavior:"smooth"})}if(del&&confirm("Delete this product?")){await api("/api/admin/products/"+del.dataset.delete,{method:"DELETE"});await loadProducts()}});
+async function api(url,init){
+  let response;try{response=await fetch(new URL(url,location.origin).toString(),Object.assign({credentials:"same-origin",cache:"no-store"},init||{}))}catch(error){const e=new Error("Network request failed before the Worker returned a response.");e.network=true;throw e}
+  const text=await response.text();let data={};try{data=text?JSON.parse(text):{}}catch{data={error:text||("HTTP "+response.status)}}if(!response.ok)throw new Error(data.error||("Request failed with HTTP "+response.status));return data
+}
+function setAuth(ok){login.hidden=ok;app.hidden=!ok;login.style.display=ok?"none":"grid";app.style.display=ok?"grid":"none";document.body.style.overflow=ok?"":"hidden";if(ok)window.scrollTo(0,0)}
+async function session(){try{await api("/api/admin/session");setAuth(true)}catch{setAuth(false);return}try{await loadProducts();await loadAvailabilityMonth()}catch(e){console.error(e)}}
+document.getElementById("loginForm").addEventListener("submit",async e=>{e.preventDefault();const fd=new FormData(e.target),s=document.getElementById("loginStatus");s.textContent="Signing in…";try{await api("/api/admin/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:fd.get("username"),password:fd.get("password")})});s.textContent="";setAuth(true);await loadProducts();await loadAvailabilityMonth()}catch(err){s.textContent=err.message}});
+document.getElementById("logout").addEventListener("click",async()=>{await api("/api/admin/logout",{method:"POST"}).catch(()=>{});location.reload()});
+function show(id){document.querySelectorAll(".view").forEach(x=>x.classList.toggle("active",x.id===id));document.querySelectorAll("[data-view]").forEach(x=>x.classList.toggle("active",x.dataset.view===id));document.getElementById("title").textContent=id.charAt(0).toUpperCase()+id.slice(1);document.getElementById("side").classList.remove("open");if(id==="availability")loadAvailabilityMonth()}
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));document.querySelectorAll("[data-jump]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.jump)));document.getElementById("menu").addEventListener("click",()=>document.getElementById("side").classList.toggle("open"));
+
+function updateStats(){document.getElementById("statProducts").textContent=products.length;document.getElementById("statStock").textContent=products.filter(p=>p.stockQuantity>0).length;document.getElementById("statMto").textContent=products.filter(p=>p.stockQuantity===0).length}
+async function loadProducts(){const d=await api("/api/admin/products");products=d.products||[];updateStats();renderProducts()}
+function renderProducts(){
+  if(!products.length){list.innerHTML='<div class="empty">No products yet. Add the customer’s new catalogue here.</div>';return}
+  list.innerHTML=products.map(p=>{const img=p.imagePath?'<img src="'+esc(p.imagePath)+'" alt="">':'🧶',status=p.stockQuantity>0?p.stockQuantity+" in stock":"Made to order";return '<div class="row"><div class="thumb">'+img+'</div><div><h4>'+esc(p.name)+'</h4><p>'+money(p.priceCents)+' · '+status+' · '+(p.published?"Published":"Hidden")+'</p></div><div class="row-actions"><button data-edit="'+p.id+'">Edit</button><button data-delete="'+p.id+'">Delete</button></div></div>'}).join("")
+}
+list.addEventListener("click",async e=>{
+  const edit=e.target.closest("[data-edit]"),del=e.target.closest("[data-delete]");
+  if(edit){const p=products.find(x=>String(x.id)===edit.dataset.edit);if(!p)return;form.elements.id.value=p.id;form.elements.imagePath.value=p.imagePath||"";form.elements.name.value=p.name;form.elements.category.value=p.category||"";form.elements.price.value=Math.round((p.priceCents||0)/100);form.elements.description.value=p.description||"";form.elements.stockQuantity.value=p.stockQuantity||0;form.elements.sortOrder.value=p.sortOrder||0;form.elements.featured.checked=!!p.featured;form.elements.published.checked=!!p.published;document.getElementById("productHeading").textContent="Edit product";document.getElementById("cancel").hidden=false;preview.innerHTML=p.imagePath?'<img src="'+esc(p.imagePath)+'" alt="">':"Image preview";show("products");window.scrollTo({top:0,behavior:"smooth"})}
+  if(del&&confirm("Delete this product?")){await api("/api/admin/products/"+del.dataset.delete,{method:"DELETE"});await loadProducts()}
+});
 document.getElementById("cancel").addEventListener("click",resetProduct);
 function resetProduct(){form.reset();form.elements.id.value="";form.elements.imagePath.value="";form.elements.stockQuantity.value=0;form.elements.sortOrder.value=0;form.elements.published.checked=true;preview.textContent="Image preview";document.getElementById("productHeading").textContent="Add product";document.getElementById("cancel").hidden=true}
-function webp(file){return new Promise(function(resolve,reject){var img=new Image(),url=URL.createObjectURL(file);img.onload=function(){var scale=Math.min(1,1600/Math.max(img.width,img.height)),w=Math.max(1,Math.round(img.width*scale)),h=Math.max(1,Math.round(img.height*scale)),c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d",{alpha:true}).drawImage(img,0,0,w,h);URL.revokeObjectURL(url);c.toBlob(function(b){b?resolve(b):reject(new Error("WebP conversion failed."))},"image/webp",.82)};img.onerror=function(){URL.revokeObjectURL(url);reject(new Error("Could not read image."))};img.src=url})}
-imageInput.addEventListener("change",function(){var f=imageInput.files[0];if(!f){preview.textContent="Image preview";return}var u=URL.createObjectURL(f);preview.innerHTML='<img src="'+u+'" alt="Preview">'});
-form.addEventListener("submit",async function(e){
-  e.preventDefault();
-  var s=document.getElementById("productStatus"),
-      id=form.elements.id.value,
-      imgPath=form.elements.imagePath.value,
-      uploadedPath="",
-      stage="product save";
-  s.textContent="Saving…";
-
+function webp(file){return new Promise((resolve,reject)=>{const img=new Image(),url=URL.createObjectURL(file);img.onload=()=>{const scale=Math.min(1,1600/Math.max(img.width,img.height)),w=Math.max(1,Math.round(img.width*scale)),h=Math.max(1,Math.round(img.height*scale)),c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d",{alpha:true}).drawImage(img,0,0,w,h);URL.revokeObjectURL(url);c.toBlob(b=>b?resolve(b):reject(new Error("WebP conversion failed.")),"image/webp",.82)};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("Could not read image."))};img.src=url})}
+imageInput.addEventListener("change",()=>{const f=imageInput.files[0];if(!f){preview.textContent="Image preview";return}const u=URL.createObjectURL(f);preview.innerHTML='<img src="'+u+'" alt="Preview">'});
+form.addEventListener("submit",async e=>{
+  e.preventDefault();const s=document.getElementById("productStatus"),id=form.elements.id.value;let imgPath=form.elements.imagePath.value,uploadedPath="",stage="product save";s.textContent="Saving…";
   try{
-    if(imageInput.files[0]){
-      stage="image conversion";
-      s.textContent="Converting image to WebP…";
-      var blob=await webp(imageInput.files[0]);
-      if(blob.size>8*1024*1024)throw new Error("Converted WebP is larger than 8 MB.");
-
-      stage="R2 image upload";
-      s.textContent="Uploading image…";
-      var up=await api("/api/admin/images",{
-        method:"POST",
-        headers:{"Content-Type":"image/webp"},
-        body:blob
-      });
-      imgPath=up.path;
-      uploadedPath=up.path;
-    }
-
-    stage="D1 product save";
-    s.textContent="Saving product…";
-    var payload={
-      name:form.elements.name.value,
-      category:form.elements.category.value,
-      description:form.elements.description.value,
-      priceCents:Math.round(Number(form.elements.price.value||0)*100),
-      stockQuantity:Number(form.elements.stockQuantity.value||0),
-      sortOrder:Number(form.elements.sortOrder.value||0),
-      imagePath:imgPath,
-      featured:form.elements.featured.checked,
-      published:form.elements.published.checked
-    };
-
-    await api(id?"/api/admin/products/"+id:"/api/admin/products",{
-      method:id?"PUT":"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(payload)
-    });
-
-    resetProduct();
-    await loadProducts();
-    s.textContent="Saved.";
-  }catch(err){
-    if(uploadedPath){
-      await api("/api/admin/images?path="+encodeURIComponent(uploadedPath),{method:"DELETE"}).catch(function(){});
-    }
-
-    var detail=err&&err.message?err.message:"Unknown error";
-    if(err&&err.network){
-      try{
-        var diag=await api("/api/admin/diagnostics");
-        detail="Network failure during "+stage+". D1: "+(diag.database?"OK":"FAIL")+" · R2: "+(diag.r2?"OK":"FAIL")+(diag.errors&&diag.errors.length?" · "+diag.errors.join(" | "):"");
-      }catch(_){
-        detail="Network failure during "+stage+". The browser could not complete the request to the Worker.";
-      }
-    }else{
-      detail=stage+" failed: "+detail;
-    }
-    s.textContent=detail;
-  }
+    if(imageInput.files[0]){stage="image conversion";s.textContent="Converting image to WebP…";const blob=await webp(imageInput.files[0]);if(blob.size>8*1024*1024)throw new Error("Converted WebP is larger than 8 MB.");stage="R2 image upload";s.textContent="Uploading image…";const up=await api("/api/admin/images",{method:"POST",headers:{"Content-Type":"image/webp"},body:blob});imgPath=up.path;uploadedPath=up.path}
+    stage="D1 product save";s.textContent="Saving product…";
+    const payload={name:form.elements.name.value,category:form.elements.category.value,description:form.elements.description.value,priceCents:Math.round(Number(form.elements.price.value||0)*100),stockQuantity:Number(form.elements.stockQuantity.value||0),sortOrder:Number(form.elements.sortOrder.value||0),imagePath:imgPath,featured:form.elements.featured.checked,published:form.elements.published.checked};
+    await api(id?"/api/admin/products/"+id:"/api/admin/products",{method:id?"PUT":"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});resetProduct();await loadProducts();s.textContent="Saved."
+  }catch(err){if(uploadedPath)await api("/api/admin/images?path="+encodeURIComponent(uploadedPath),{method:"DELETE"}).catch(()=>{});s.textContent=stage+" failed: "+err.message}
 });
-document.getElementById("availabilityForm").addEventListener("submit",async function(e){e.preventDefault();var fd=new FormData(e.target),s=document.getElementById("availabilityStatus");s.textContent="Saving…";try{await api("/api/admin/availability",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({date:fd.get("date"),status:fd.get("status"),orderCount:Number(fd.get("orderCount")||0),notes:fd.get("notes")})});s.textContent="Saved.";await loadAvailability()}catch(err){s.textContent=err.message}});
+
+function monthRange(){const y=adminMonth.getFullYear(),m=adminMonth.getMonth();return{from:isoDate(new Date(y,m,1)),to:isoDate(new Date(y,m+1,0))}}
+async function loadAvailabilityMonth(){const r=monthRange(),d=await api("/api/admin/availability?from="+r.from+"&to="+r.to);availabilityRows=d.availability||[];renderAdminCalendar();if(selectedDate&&selectedDate>=r.from&&selectedDate<=r.to)populateDate(selectedDate)}
+function rowFor(date){return availabilityRows.find(x=>x.date===date)||{date,status:"available",order_count:0,notes:""}}
+function renderAdminCalendar(){
+  const y=adminMonth.getFullYear(),m=adminMonth.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0),now=new Date();document.getElementById("adminMonth").textContent=new Intl.DateTimeFormat("en-US",{month:"long",year:"numeric"}).format(first);
+  let html="";for(let i=0;i<first.getDay();i++)html+='<button class="day blank" disabled></button>';
+  for(let n=1;n<=last.getDate();n++){const d=new Date(y,m,n),key=isoDate(d),row=rowFor(key),past=d<new Date(now.getFullYear(),now.getMonth(),now.getDate()),status=row.status||"available";html+='<button class="day '+status+(past?" past":"")+(selectedDate===key?" selected":"")+'" data-date="'+key+'"><b>'+n+'</b><small>'+status+'</small><em>'+Number(row.order_count||0)+' orders</em></button>'}
+  adminCalendar.innerHTML=html
+}
+function populateDate(date){selectedDate=date;const row=rowFor(date);document.getElementById("dateHeading").textContent=dateHuman(date);document.getElementById("dateSummary").textContent=Number(row.order_count||0)+" orders due";document.getElementById("dateCurrent").textContent="Current status: "+(row.status==="blocked"?"Blocked / Unavailable":row.status.charAt(0).toUpperCase()+row.status.slice(1));document.getElementById("availabilityDate").value=date;document.getElementById("availabilityCount").value=Number(row.order_count||0);document.getElementById("availabilityStatusSelect").value=row.status||"available";document.getElementById("availabilityNotes").value=row.notes||"";renderAdminCalendar()}
+adminCalendar.addEventListener("click",e=>{const b=e.target.closest("[data-date]");if(b)populateDate(b.dataset.date)});
+document.getElementById("adminPrev").addEventListener("click",()=>{adminMonth=new Date(adminMonth.getFullYear(),adminMonth.getMonth()-1,1);selectedDate="";loadAvailabilityMonth()});
+document.getElementById("adminNext").addEventListener("click",()=>{adminMonth=new Date(adminMonth.getFullYear(),adminMonth.getMonth()+1,1);selectedDate="";loadAvailabilityMonth()});
+document.getElementById("adminToday").addEventListener("click",()=>{const n=new Date();adminMonth=new Date(n.getFullYear(),n.getMonth(),1);selectedDate=isoDate(n);loadAvailabilityMonth()});
+document.getElementById("availabilityForm").addEventListener("submit",async e=>{e.preventDefault();const s=document.getElementById("availabilityStatus");if(!selectedDate){s.textContent="Select a date first.";return}const payload={date:selectedDate,status:document.getElementById("availabilityStatusSelect").value,orderCount:Number(document.getElementById("availabilityCount").value||0),notes:document.getElementById("availabilityNotes").value};s.textContent="Saving…";try{await api("/api/admin/availability",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});s.textContent="Saved.";await loadAvailabilityMonth()}catch(err){s.textContent=err.message}});
+
+document.getElementById("runDiagnostics").addEventListener("click",async()=>{const s=document.getElementById("diagnosticsStatus");s.textContent="Testing D1 and R2…";try{const d=await api("/api/admin/diagnostics");s.textContent="DB binding: "+(d.databaseBinding?"YES":"NO")+" · D1: "+(d.database?"OK":"FAIL")+" · R2 binding: "+(d.r2Binding?"YES":"NO")+" · R2: "+(d.r2?"OK":"FAIL")+(d.errors&&d.errors.length?" · "+d.errors.join(" | "):"")}catch(err){s.textContent=err.message}});
 session();
 })();
 </script>
