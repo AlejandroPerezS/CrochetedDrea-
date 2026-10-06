@@ -153,7 +153,7 @@ async function diagnostics(r,env){
       result.errors.push("R2: "+(error&&error.message?error.message:"Unknown R2 error"));
     }
   }
-  return json(result,{status:result.database&&result.r2?200:500});
+  result.ok=result.database&&result.r2;return json(result);
 }
 
 async function api(r,env,p){if(p==="/api/health")return json({ok:true,service:"A Crocheted Dream",adminConfigured:Boolean(env.ADMIN_USERNAME&&env.ADMIN_PASSWORD&&env.ADMIN_SESSION_SECRET),databaseConfigured:Boolean(env.DB),imageStorageConfigured:Boolean(env.PRODUCT_IMAGES)});if(p==="/api/products")return publicProducts(r,env);if(p==="/api/home-feature")return homeFeature(r,env);if(p==="/api/availability")return publicAvailability(r,env);if(p==="/api/admin/login")return login(r,env);if(p==="/api/admin/logout")return logout(r);if(p==="/api/admin/session")return session(r,env);if(p==="/api/admin/products")return adminProducts(r,env);if(p==="/api/admin/images")return upload(r,env);if(p==="/api/admin/availability")return adminAvailability(r,env);if(p==="/api/admin/diagnostics")return diagnostics(r,env);const m=p.match(/^\/api\/admin\/products\/(\d+)$/);if(m)return adminProduct(r,env,m[1]);return json({error:"API route not found."},{status:404})}
