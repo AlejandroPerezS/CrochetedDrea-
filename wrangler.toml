@@ -2,15 +2,20 @@ name = "crocheted-dream"
 main = "src/worker.js"
 compatibility_date = "2026-10-01"
 
+# Required Cloudflare secrets (set in dashboard or with wrangler secret put):
+# ADMIN_USERNAME
+# ADMIN_PASSWORD
+# ADMIN_SESSION_SECRET
+
 [assets]
 directory = "./public"
 binding = "ASSETS"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "crocheted-dream"
+database_name = "a-crocheted-dream"
 database_id = "a4255141-e362-4689-9d60-ff6cfe48f2d9"
 
 [[r2_buckets]]
 binding = "PRODUCT_IMAGES"
-bucket_name = "crocheted-dream-product-images"
+bucket_name = "a-crocheted-dream-product-images"
