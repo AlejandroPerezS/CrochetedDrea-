@@ -25,38 +25,21 @@ function setCookie(r,t){return COOKIE_NAME+"="+t+"; Path=/; HttpOnly; SameSite=S
 function clearCookie(r){return COOKIE_NAME+"=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0"+(new URL(r.url).protocol==="https:"?"; Secure":"")}
 async function requireAdmin(r,env){return await verify(r,env)?null:json({error:"Authentication required."},{status:401})}
 function map(row){return{id:row.id,name:row.name,slug:row.slug,category:row.category,description:row.description,priceCents:row.price_cents,price:row.price_cents/100,stockQuantity:row.stock_quantity,imagePath:row.image_path,featured:Boolean(row.is_featured),published:Boolean(row.is_published),sortOrder:row.sort_order,createdAt:row.created_at,updatedAt:row.updated_at}}
-const SCHEMA_SQL=`
-CREATE TABLE IF NOT EXISTS store_products (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,
-  slug TEXT NOT NULL UNIQUE,
-  category TEXT NOT NULL DEFAULT '',
-  description TEXT NOT NULL DEFAULT '',
-  price_cents INTEGER NOT NULL DEFAULT 0 CHECK (price_cents >= 0),
-  stock_quantity INTEGER NOT NULL DEFAULT 0 CHECK (stock_quantity >= 0),
-  image_path TEXT NOT NULL DEFAULT '',
-  is_featured INTEGER NOT NULL DEFAULT 0 CHECK (is_featured IN (0,1)),
-  is_published INTEGER NOT NULL DEFAULT 1 CHECK (is_published IN (0,1)),
-  sort_order INTEGER NOT NULL DEFAULT 0,
-  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-CREATE INDEX IF NOT EXISTS idx_store_products_public
-ON store_products (is_published, is_featured DESC, sort_order ASC, id DESC);
-CREATE TABLE IF NOT EXISTS availability (
-  date TEXT PRIMARY KEY,
-  status TEXT NOT NULL DEFAULT 'available' CHECK (status IN ('available','full','blocked')),
-  order_count INTEGER NOT NULL DEFAULT 0 CHECK (order_count >= 0),
-  notes TEXT NOT NULL DEFAULT '',
-  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-CREATE INDEX IF NOT EXISTS idx_availability_date ON availability (date);
-`;
+const SCHEMA_STATEMENTS=[
+  "CREATE TABLE IF NOT EXISTS store_products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, slug TEXT NOT NULL UNIQUE, category TEXT NOT NULL DEFAULT '', description TEXT NOT NULL DEFAULT '', price_cents INTEGER NOT NULL DEFAULT 0 CHECK (price_cents >= 0), stock_quantity INTEGER NOT NULL DEFAULT 0 CHECK (stock_quantity >= 0), image_path TEXT NOT NULL DEFAULT '', is_featured INTEGER NOT NULL DEFAULT 0 CHECK (is_featured IN (0,1)), is_published INTEGER NOT NULL DEFAULT 1 CHECK (is_published IN (0,1)), sort_order INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)",
+  "CREATE INDEX IF NOT EXISTS idx_store_products_public ON store_products (is_published, is_featured DESC, sort_order ASC, id DESC)",
+  "CREATE TABLE IF NOT EXISTS availability (date TEXT PRIMARY KEY, status TEXT NOT NULL DEFAULT 'available' CHECK (status IN ('available','full','blocked')), order_count INTEGER NOT NULL DEFAULT 0 CHECK (order_count >= 0), notes TEXT NOT NULL DEFAULT '', updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)",
+  "CREATE INDEX IF NOT EXISTS idx_availability_date ON availability (date)"
+];
 let schemaReadyPromise=null;
 async function ensureSchema(env){
   if(!env.DB)throw new Error("D1 binding DB is not configured.");
   if(!schemaReadyPromise){
-    schemaReadyPromise=env.DB.exec(SCHEMA_SQL).catch(function(error){
+    schemaReadyPromise=(async function(){
+      for(const sql of SCHEMA_STATEMENTS){
+        await env.DB.prepare(sql).run();
+      }
+    })().catch(function(error){
       schemaReadyPromise=null;
       throw error;
     });
