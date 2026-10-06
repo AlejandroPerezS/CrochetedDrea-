@@ -17,17 +17,24 @@ CREATE TABLE IF NOT EXISTS store_products (
 );
 
 CREATE INDEX IF NOT EXISTS idx_store_products_public
-ON store_products (is_published, is_featured DESC, sort_order ASC, id DESC);
+ON store_products (
+  is_published,
+  is_featured DESC,
+  sort_order ASC,
+  id DESC
+);
 
 CREATE TABLE IF NOT EXISTS availability (
   date TEXT PRIMARY KEY,
-  status TEXT NOT NULL DEFAULT 'available' CHECK (status IN ('available','full','blocked')),
-  order_count INTEGER NOT NULL DEFAULT 0 CHECK (order_count >= 0),
+  status TEXT NOT NULL DEFAULT 'available'
+    CHECK (status IN ('available','full','blocked')),
+  order_count INTEGER NOT NULL DEFAULT 0
+    CHECK (order_count >= 0),
   notes TEXT NOT NULL DEFAULT '',
   updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS idx_availability_date ON availability (date);
+CREATE INDEX IF NOT EXISTS idx_availability_date
+ON availability (date);
 
--- Deliberately uses store_products so the legacy products table is left untouched.
--- No Supabase import, no seed products, no migration. The customer creates a fresh catalog through /admin/.
+-- Fresh database. No seed products and no migration/import data.
