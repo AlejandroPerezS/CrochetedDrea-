@@ -1,6 +1,6 @@
 PRAGMA foreign_keys = ON;
 
-CREATE TABLE IF NOT EXISTS products (
+CREATE TABLE IF NOT EXISTS store_products (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   slug TEXT NOT NULL UNIQUE,
@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS products (
   updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS idx_products_public
-ON products (is_published, is_featured DESC, sort_order ASC, id DESC);
+CREATE INDEX IF NOT EXISTS idx_store_products_public
+ON store_products (is_published, is_featured DESC, sort_order ASC, id DESC);
 
 CREATE TABLE IF NOT EXISTS availability (
   date TEXT PRIMARY KEY,
@@ -29,5 +29,5 @@ CREATE TABLE IF NOT EXISTS availability (
 
 CREATE INDEX IF NOT EXISTS idx_availability_date ON availability (date);
 
--- Deliberately empty: no Supabase import, no seed products, no migration.
--- The customer creates a fresh catalog through /admin/.
+-- Deliberately uses store_products so the legacy products table is left untouched.
+-- No Supabase import, no seed products, no migration. The customer creates a fresh catalog through /admin/.
