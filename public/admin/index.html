@@ -57,7 +57,7 @@ document.getElementById("runDiagnostics").addEventListener("click",async functio
   s.textContent="Testing D1 and R2…";
   try{
     var d=await api("/api/admin/diagnostics");
-    s.textContent="D1: "+(d.database?"OK":"FAIL")+" · R2: "+(d.r2?"OK":"FAIL")+(d.errors&&d.errors.length?" · "+d.errors.join(" | "):"");
+    s.textContent="DB binding: "+(d.databaseBinding?"YES":"NO")+" · D1: "+(d.database?"OK":"FAIL")+" · R2 binding: "+(d.r2Binding?"YES":"NO")+" · R2: "+(d.r2?"OK":"FAIL")+(d.errors&&d.errors.length?" · "+d.errors.join(" | "):"");
   }catch(err){
     s.textContent=err.message;
   }
