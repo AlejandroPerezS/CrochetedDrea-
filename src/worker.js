@@ -25,7 +25,7 @@ function setCookie(r,t){return COOKIE_NAME+"="+t+"; Path=/; HttpOnly; SameSite=S
 function clearCookie(r){return COOKIE_NAME+"=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0"+(new URL(r.url).protocol==="https:"?"; Secure":"")}
 async function requireAdmin(r,env){return await verify(r,env)?null:json({error:"Authentication required."},{status:401})}
 function map(row){return{id:row.id,name:row.name,slug:row.slug,category:row.category,description:row.description,priceCents:row.price_cents,price:row.price_cents/100,stockQuantity:row.stock_quantity,imagePath:row.image_path,featured:Boolean(row.is_featured),published:Boolean(row.is_published),sortOrder:row.sort_order,createdAt:row.created_at,updatedAt:row.updated_at}}
-const SCHEMA_SQL=\`
+const SCHEMA_SQL=`
 CREATE TABLE IF NOT EXISTS products (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS availability (
   updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX IF NOT EXISTS idx_availability_date ON availability (date);
-\`;
+`;
 let schemaReadyPromise=null;
 async function ensureSchema(env){
   if(!env.DB)throw new Error("D1 binding DB is not configured.");
