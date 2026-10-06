@@ -13,7 +13,7 @@ binding = "ASSETS"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "a-crocheted-dream"
+database_name = "crocheteddream"
 database_id = "4798a9ac-0bf6-4010-ba2e-b1fc2347ea60"
 
 [[r2_buckets]]
