@@ -17,20 +17,51 @@
 <div class="app" id="app" hidden>
 <aside class="side" id="side"><h2>A Crocheted<br>Dream</h2><small>Cloudflare store admin</small><div class="nav"><button class="active" data-view="overview">Overview</button><button data-view="products">Products</button><button data-view="availability">Availability</button></div><button class="logout" id="logout">Sign out</button></aside>
 <main class="main"><header class="top"><div><button class="btn mobile" id="menu">Menu</button><h1 id="title">Overview</h1><p>Private dashboard · changes publish to the live store.</p></div><span class="badge">Authenticated</span></header>
-<section class="view active" id="overview"><div class="stats"><div class="stat"><span>Products</span><strong id="statProducts">0</strong></div><div class="stat"><span>In stock</span><strong id="statStock">0</strong></div><div class="stat"><span>Made to order</span><strong id="statMto">0</strong></div></div><div class="panel"><h3>Fresh catalogue</h3><p>No Supabase items are imported. This store starts empty and every product is created here.</p><button class="btn primary" data-jump="products">Add the first product</button></div></section>
+<section class="view active" id="overview"><div class="stats"><div class="stat"><span>Products</span><strong id="statProducts">0</strong></div><div class="stat"><span>In stock</span><strong id="statStock">0</strong></div><div class="stat"><span>Made to order</span><strong id="statMto">0</strong></div></div><div class="panel"><h3>Fresh catalogue</h3><p>No Supabase items are imported. This store starts empty and every product is created here.</p><div class="buttons"><button class="btn primary" data-jump="products">Add the first product</button><button class="btn" type="button" id="runDiagnostics">Test D1 + R2</button></div><div class="status" id="diagnosticsStatus"></div></div></section>
 <section class="view" id="products"><div class="grid"><div class="panel"><h3 id="productHeading">Add product</h3><p>Images are converted to WebP before upload.</p><form id="productForm"><input type="hidden" name="id"><input type="hidden" name="imagePath"><div class="fields"><div class="field"><label>Name</label><input name="name" maxlength="160" required></div><div class="two"><div class="field"><label>Category</label><input name="category" maxlength="100"></div><div class="field"><label>Price (GYD)</label><input name="price" type="number" min="0" step="1" required></div></div><div class="field"><label>Description</label><textarea name="description" rows="4" maxlength="4000"></textarea></div><div class="two"><div class="field"><label>Stock quantity</label><input name="stockQuantity" type="number" min="0" step="1" value="0" required></div><div class="field"><label>Display order <span style="font-weight:600;text-transform:none;letter-spacing:0">(lower shows first)</span></label><input name="sortOrder" type="number" step="1" value="0"></div></div><div class="field"><label>Product image</label><input id="image" type="file" accept="image/*"></div><div class="preview" id="preview">Image preview</div><div class="checks"><label><input name="featured" type="checkbox"> Featured</label><label><input name="published" type="checkbox" checked> Published</label></div><div class="buttons"><button class="btn primary" type="submit">Save product</button><button class="btn" type="button" id="cancel" hidden>Cancel edit</button></div></div><div class="status" id="productStatus"></div></form></div><div class="panel"><h3>Products</h3><p>Published items appear on the storefront and can be selected for the random homepage image.</p><div class="list" id="list"></div></div></div></section>
 <section class="view" id="availability"><div class="grid"><div class="panel"><h3>Set a date</h3><p>Available is the default. Use Full or Blocked when a made-to-order date cannot be accepted.</p><form id="availabilityForm"><div class="fields"><div class="field"><label>Date</label><input name="date" type="date" required></div><div class="field"><label>Status</label><select name="status"><option value="available">Available</option><option value="full">Full</option><option value="blocked">Blocked</option></select></div><div class="field"><label>Current order count</label><input name="orderCount" type="number" min="0" step="1" value="0"></div><div class="field"><label>Notes</label><textarea name="notes" rows="3"></textarea></div><button class="btn primary" type="submit">Save date</button></div><div class="status" id="availabilityStatus"></div></form></div><div class="panel"><h3>Upcoming overrides</h3><p>Only dates you explicitly changed are listed here.</p><div class="list" id="availabilityList"></div></div></div></section>
 </main></div>
 <script>
 (function(){
 var products=[],login=document.getElementById("login"),app=document.getElementById("app"),form=document.getElementById("productForm"),list=document.getElementById("list"),preview=document.getElementById("preview"),imageInput=document.getElementById("image");
-async function api(url,init){var r=await fetch(url,Object.assign({credentials:"same-origin"},init||{})),d=await r.json();if(!r.ok)throw new Error(d.error||"Request failed");return d}
+async function api(url,init){
+  var response;
+  try{
+    response=await fetch(new URL(url,location.origin).toString(),Object.assign({
+      credentials:"same-origin",
+      cache:"no-store"
+    },init||{}));
+  }catch(error){
+    var networkError=new Error("Network request failed before the Worker returned a response.");
+    networkError.cause=error;
+    networkError.network=true;
+    throw networkError;
+  }
+  var text=await response.text(),data={};
+  try{data=text?JSON.parse(text):{}}catch(_){data={error:text||("HTTP "+response.status)}}
+  if(!response.ok){
+    var requestError=new Error(data.error||("Request failed with HTTP "+response.status));
+    requestError.status=response.status;
+    throw requestError;
+  }
+  return data;
+}
 function setAuth(ok){login.hidden=ok;app.hidden=!ok;login.style.display=ok?"none":"grid";app.style.display=ok?"grid":"none";document.body.style.overflow=ok?"":"hidden";if(ok){window.scrollTo({top:0,left:0,behavior:"instant"})}}
 async function session(){try{await api("/api/admin/session");setAuth(true)}catch(e){setAuth(false);return}try{await loadProducts();await loadAvailability()}catch(e){console.error("Dashboard data load failed",e)}}
 document.getElementById("loginForm").addEventListener("submit",async function(e){e.preventDefault();var fd=new FormData(e.target),s=document.getElementById("loginStatus");s.textContent="Signing in…";try{await api("/api/admin/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:fd.get("username"),password:fd.get("password")})});s.textContent="";setAuth(true)}catch(err){s.textContent=err.message;return}try{await loadProducts();await loadAvailability()}catch(err){console.error("Dashboard data load failed",err)}});
 document.getElementById("logout").addEventListener("click",async function(){await api("/api/admin/logout",{method:"POST"}).catch(function(){});location.reload()});
 function show(id){document.querySelectorAll(".view").forEach(function(x){x.classList.toggle("active",x.id===id)});document.querySelectorAll("[data-view]").forEach(function(x){x.classList.toggle("active",x.dataset.view===id)});document.getElementById("title").textContent=id.charAt(0).toUpperCase()+id.slice(1);document.getElementById("side").classList.remove("open")}
-document.querySelectorAll("[data-view]").forEach(function(b){b.addEventListener("click",function(){show(b.dataset.view)})});document.querySelectorAll("[data-jump]").forEach(function(b){b.addEventListener("click",function(){show(b.dataset.jump)})});document.getElementById("menu").addEventListener("click",function(){document.getElementById("side").classList.toggle("open")});
+document.querySelectorAll("[data-view]").forEach(function(b){b.addEventListener("click",function(){show(b.dataset.view)})});document.querySelectorAll("[data-jump]").forEach(function(b){b.addEventListener("click",function(){show(b.dataset.jump)})});
+document.getElementById("runDiagnostics").addEventListener("click",async function(){
+  var s=document.getElementById("diagnosticsStatus");
+  s.textContent="Testing D1 and R2…";
+  try{
+    var d=await api("/api/admin/diagnostics");
+    s.textContent="D1: "+(d.database?"OK":"FAIL")+" · R2: "+(d.r2?"OK":"FAIL")+(d.errors&&d.errors.length?" · "+d.errors.join(" | "):"");
+  }catch(err){
+    s.textContent=err.message;
+  }
+});document.getElementById("menu").addEventListener("click",function(){document.getElementById("side").classList.toggle("open")});
 function money(c){return "GYD $"+Math.round((c||0)/100).toLocaleString("en-GY")}
 function esc(v){return String(v==null?"":v).replace(/[&<>'"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]})}
 function stats(){document.getElementById("statProducts").textContent=products.length;document.getElementById("statStock").textContent=products.filter(function(p){return p.stockQuantity>0}).length;document.getElementById("statMto").textContent=products.filter(function(p){return p.stockQuantity===0}).length}
@@ -41,8 +72,75 @@ document.getElementById("cancel").addEventListener("click",resetProduct);
 function resetProduct(){form.reset();form.elements.id.value="";form.elements.imagePath.value="";form.elements.stockQuantity.value=0;form.elements.sortOrder.value=0;form.elements.published.checked=true;preview.textContent="Image preview";document.getElementById("productHeading").textContent="Add product";document.getElementById("cancel").hidden=true}
 function webp(file){return new Promise(function(resolve,reject){var img=new Image(),url=URL.createObjectURL(file);img.onload=function(){var scale=Math.min(1,1600/Math.max(img.width,img.height)),w=Math.max(1,Math.round(img.width*scale)),h=Math.max(1,Math.round(img.height*scale)),c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d",{alpha:true}).drawImage(img,0,0,w,h);URL.revokeObjectURL(url);c.toBlob(function(b){b?resolve(b):reject(new Error("WebP conversion failed."))},"image/webp",.82)};img.onerror=function(){URL.revokeObjectURL(url);reject(new Error("Could not read image."))};img.src=url})}
 imageInput.addEventListener("change",function(){var f=imageInput.files[0];if(!f){preview.textContent="Image preview";return}var u=URL.createObjectURL(f);preview.innerHTML='<img src="'+u+'" alt="Preview">'});
-form.addEventListener("submit",async function(e){e.preventDefault();var s=document.getElementById("productStatus"),id=form.elements.id.value,imgPath=form.elements.imagePath.value,uploadedPath="";s.textContent="Saving…";try{if(imageInput.files[0]){var blob=await webp(imageInput.files[0]),up=await api("/api/admin/images",{method:"POST",headers:{"Content-Type":"image/webp"},body:blob});imgPath=up.path;uploadedPath=up.path}var payload={name:form.elements.name.value,category:form.elements.category.value,description:form.elements.description.value,priceCents:Math.round(Number(form.elements.price.value||0)*100),stockQuantity:Number(form.elements.stockQuantity.value||0),sortOrder:Number(form.elements.sortOrder.value||0),imagePath:imgPath,featured:form.elements.featured.checked,published:form.elements.published.checked};await api(id?"/api/admin/products/"+id:"/api/admin/products",{method:id?"PUT":"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});resetProduct();await loadProducts();s.textContent="Saved."}catch(err){if(uploadedPath){await api("/api/admin/images?path="+encodeURIComponent(uploadedPath),{method:"DELETE"}).catch(function(){})}s.textContent=err.message}});
-async function loadAvailability(){var now=new Date(),from=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0"),d=await api("/api/admin/availability?from="+from+"&to=9999-12-31"),rows=d.availability||[],box=document.getElementById("availabilityList");box.innerHTML=rows.length?rows.map(function(r){return '<div class="row" style="grid-template-columns:1fr auto"><div><h4>'+esc(r.date)+'</h4><p>'+esc(r.status)+' · '+Number(r.order_count||0)+' orders'+(r.notes?" · "+esc(r.notes):"")+'</p></div></div>'}).join(""):'<div class="empty">No date overrides yet.</div>'}
+form.addEventListener("submit",async function(e){
+  e.preventDefault();
+  var s=document.getElementById("productStatus"),
+      id=form.elements.id.value,
+      imgPath=form.elements.imagePath.value,
+      uploadedPath="",
+      stage="product save";
+  s.textContent="Saving…";
+
+  try{
+    if(imageInput.files[0]){
+      stage="image conversion";
+      s.textContent="Converting image to WebP…";
+      var blob=await webp(imageInput.files[0]);
+      if(blob.size>8*1024*1024)throw new Error("Converted WebP is larger than 8 MB.");
+
+      stage="R2 image upload";
+      s.textContent="Uploading image…";
+      var up=await api("/api/admin/images",{
+        method:"POST",
+        headers:{"Content-Type":"image/webp"},
+        body:blob
+      });
+      imgPath=up.path;
+      uploadedPath=up.path;
+    }
+
+    stage="D1 product save";
+    s.textContent="Saving product…";
+    var payload={
+      name:form.elements.name.value,
+      category:form.elements.category.value,
+      description:form.elements.description.value,
+      priceCents:Math.round(Number(form.elements.price.value||0)*100),
+      stockQuantity:Number(form.elements.stockQuantity.value||0),
+      sortOrder:Number(form.elements.sortOrder.value||0),
+      imagePath:imgPath,
+      featured:form.elements.featured.checked,
+      published:form.elements.published.checked
+    };
+
+    await api(id?"/api/admin/products/"+id:"/api/admin/products",{
+      method:id?"PUT":"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(payload)
+    });
+
+    resetProduct();
+    await loadProducts();
+    s.textContent="Saved.";
+  }catch(err){
+    if(uploadedPath){
+      await api("/api/admin/images?path="+encodeURIComponent(uploadedPath),{method:"DELETE"}).catch(function(){});
+    }
+
+    var detail=err&&err.message?err.message:"Unknown error";
+    if(err&&err.network){
+      try{
+        var diag=await api("/api/admin/diagnostics");
+        detail="Network failure during "+stage+". D1: "+(diag.database?"OK":"FAIL")+" · R2: "+(diag.r2?"OK":"FAIL")+(diag.errors&&diag.errors.length?" · "+diag.errors.join(" | "):"");
+      }catch(_){
+        detail="Network failure during "+stage+". The browser could not complete the request to the Worker.";
+      }
+    }else{
+      detail=stage+" failed: "+detail;
+    }
+    s.textContent=detail;
+  }
+});
 document.getElementById("availabilityForm").addEventListener("submit",async function(e){e.preventDefault();var fd=new FormData(e.target),s=document.getElementById("availabilityStatus");s.textContent="Saving…";try{await api("/api/admin/availability",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({date:fd.get("date"),status:fd.get("status"),orderCount:Number(fd.get("orderCount")||0),notes:fd.get("notes")})});s.textContent="Saved.";await loadAvailability()}catch(err){s.textContent=err.message}});
 session();
 })();
